@@ -1,19 +1,11 @@
-import { LoginButton } from "./LoginButton";
+import { LoginCardImg } from "./LoginCardImg";
 import { LoginCardRoot } from "./LoginCardRoot";
-import { LoginCheckBox } from "./LoginCheckBox";
-import { LoginInput } from "./LoginInput";
-import { LoginLink } from "./LoginLink";
-import { LoginSmallText } from "./LoginSmallText";
-import { LoginText } from "./LoginText";
+
+
+
 
 export const LoginCard = {
-  Root: LoginCardRoot,
-  Button: LoginButton,
-  CheckBox: LoginCheckBox,
-  Input: LoginInput,
-  Link: LoginLink,
-  Text: LoginText,
-  Small: LoginSmallText
-} 
+    Root: LoginCardRoot,
+    Img: LoginCardImg,
 
-
+}
