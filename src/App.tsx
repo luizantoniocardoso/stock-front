@@ -4,9 +4,7 @@ import router from "./Router";
 
 const App: React.FC = () => {
     return (
-        <React.StrictMode>
             <RouterProvider router={router} />
-        </React.StrictMode>
     );
     }
 

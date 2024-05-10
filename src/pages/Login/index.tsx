@@ -10,10 +10,9 @@ export const Login = () => {
     const [password, setPassword] = useState("");
     const [email, setEmail] = useState("");
     const [errorInput, setErrorInput] = useState(false);
+    const [response, fetchData] = useFetch();
     
     const navigate = useNavigate();
-    const {} = useFetch();
-
 
     const refEmail = useRef<HTMLInputElement>(null);
     const refPassword = useRef<HTMLInputElement>(null);
@@ -28,16 +27,15 @@ export const Login = () => {
     const handleCheckBoxChange = () => {
         setShowPassword(!showPassword)
         refPassword.current?.focus()
-
         if(showPassword) return refPassword.current?.setAttribute("type", "password")
         return refPassword.current?.setAttribute("type", "text")
     }
 
-    const handleLogin = (e: MouseEvent<HTMLButtonElement>) => {
+    const handleLogin = async (e: MouseEvent<HTMLButtonElement>) => {
         e.preventDefault();
-        fetch.get("https://jsonplaceholder.typicode.com/posts" )
-        navigate("/home")
-    }
+        console.log('coisartaada');
+        await fetchData('https://jsonplaceholder.typicode.com/posts');
+    };
 
     return(
         <section className="flex items-center justify-center w-full h-screen bg-slate-200" >

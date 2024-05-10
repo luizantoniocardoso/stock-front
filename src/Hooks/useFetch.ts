@@ -1,108 +1,37 @@
-import { useEffect, useState } from "react";
+import { useState } from 'react';
 
-interface useFetchReturn {
-    data: any;
-    loading: boolean;
-    error: any;
-}
+type FetchResponse<T> = {
+  data: T | null;
+  error: any | null;
+  isLoading: boolean;
+};
 
-// export const useFetch = (): any => {
-//     const [data, setData] = useState(null);
-//     const [loading, setLoading] = useState(true);
-//     const [error, setError] = useState(null);
+export const useFetch = <T>() => {
+  const [response, setResponse] = useState<FetchResponse<T>>({
+    data: null,
+    error: null,
+    isLoading: false,
+  });
 
-//     const get = (url: string) => {    
-//         useEffect(() => {
-//             (async () => {
-//                 try {
-//                     const response = await fetch(url);
-//                     if (!response.ok) throw new Error('Falha ao carregar os dados');
-//                     const jsonData = await response.json();
-//                     setData(jsonData);
-//                     setLoading(false);
-//                 } catch (error: any) {
-//                     setError(error);
-//                     setLoading(false);
-//                 }
-//             })();
-            
-//             return () => {};
-//         }, [url]);     
-//     }
- 
-//     return methods; 
-// }
+  const fetchData = async (url: string) => {
+    setResponse((prevState) => ({ ...prevState, isLoading: true }));
 
+    try {
+      const res = await fetch(url);
+      if (!res.ok) throw new Error('Network response was not ok');
+      const data = await res.json();
+      setResponse({ data, error: null, isLoading: false });
 
+    } 
+    catch (error) {
+        setResponse({ data: null, error, isLoading: false });
+    }
+    
+    
 
+  };
 
-// export const useFetch = (url: string) => {
-//   const [data, setData] = useState(null);
-//   const [config, setConfig] = useState(null);
-//   const [method, setMethod] = useState(null);
-//   const [callFetch, setCallFetch] = useState(false);
-//   const [loading, setLoading] = useState(false);
-//   const [error, setError] = useState(false);
+  return [response, fetchData] as const;
+};
 
-//   const [itemId, setItemId] = useState(null);
-
-//   const httpConfig = (data, method) => {
-//     if (method === "POST") {
-//       setConfig({
-//         method: "POST",
-//         headers: {
-//           "Content-Type": "application/json",
-//         },
-//         body: JSON.stringify(data),
-//       });
-
-//       setMethod("POST");
-//     } else if (method === "DELETE") {
-//       setConfig({
-//         method: "DELETE",
-//         headers: {
-//           "Content-Type": "application/json",
-//         },
-//       });
-
-//       setMethod("DELETE");
-//       setItemId(data);
-//     }
-//   };
-
-//   useEffect(() => {
-//     const fetchData = async () => {
-//       setLoading(true);
-
-//       try {
-//         const res = await fetch(url);
-
-//         const json = await res.json();
-
-//         setData(json);
-
-//         setMethod(null);
-
-//         setError(null);
-//       } catch (error) {
-//         console.log(error.message);
-
-//         setError("Houve um erro ao carregar os dados!");
-//       }
-
-//       setLoading(false);
-//     };
-
-//     fetchData();
-//   }, [url, callFetch]);
-
- 
-
-//     httpRequest();
-//   }, [config]);
-
-//   console.log(config);
-
-//   return { data, httpConfig, loading, error };
-// };
 
