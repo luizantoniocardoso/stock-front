@@ -8,7 +8,7 @@ interface FormsRootProps {
 export const FormsRoot = ({children}: FormsRootProps) => {
 
     return(
-        <div className="md:w-8/12 lg:ml-6 lg:w-8/12">
+        <div className="md:w-full lg:ml-6 lg:w-5/6">
             <form>
                 {children}
             </form>

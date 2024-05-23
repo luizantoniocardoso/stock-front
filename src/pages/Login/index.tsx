@@ -34,13 +34,25 @@ export const Login = () => {
     const handleLogin = async (e: MouseEvent<HTMLButtonElement>) => {
         e.preventDefault();
         console.log('coisartaada');
-        await fetchData('https://jsonplaceholder.typicode.com/posts');
+        await fetchData('https://tiagos-stock.up.railway.app/auth', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(
+                {
+                    email,
+                    senha: password
+                }
+            )
+        })
+        
     };
 
     return(
         <section className="flex items-center justify-center w-full h-screen bg-slate-200" >
             <LoginCard.Root>
-                <LoginCard.Img src="https://tecdn.b-cdn.net/img/Photos/new-templates/bootstrap-login-form/draw2.svg" alt="Imagem de login" />
+                <LoginCard.Img src="img/6.png" alt="Imagem de login" />
                 <Forms.Root>
                     <Forms.Input id="emailInput" arialabel="Email" type="text" placeholder="Email" ref={refEmail} onChangeAction={handleEmailChange} value={email}>
                      {errorInput && <Forms.Small id="emailInput" text="Verifique se o Email esta correto" />}

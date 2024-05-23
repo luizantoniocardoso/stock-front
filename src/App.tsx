@@ -4,8 +4,8 @@ import router from "./Router";
 
 const App: React.FC = () => {
     return (
-            <RouterProvider router={router} />
+        <RouterProvider router={router} />
     );
-    }
+}
 
 export default App;
