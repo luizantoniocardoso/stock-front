@@ -6,12 +6,12 @@ import { Login } from "../pages/Login";
 import "tw-elements-react/dist/css/tw-elements-react.min.css";
 import { Home } from "../pages/Home";
 
-
+import { MainLayout } from "@/Layouts/MainLayout";
 
   const router = createBrowserRouter([
     {
       path: "/",
-      element: <Login />,
+      element:  <Login />,
     },
     {
       path: "/login",
@@ -19,7 +19,7 @@ import { Home } from "../pages/Home";
     },
     { 
       path: "/home",
-      element: <Home />,
+      element: <MainLayout><Home/></MainLayout>,
     }
   ]);
 

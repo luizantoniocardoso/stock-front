@@ -8,7 +8,6 @@ export interface FormsButtonProps{
 
 
 export const FormsButton = ({ text, action }: FormsButtonProps) => {
-
     return (
         <TERipple rippleColor="light" className="w-full">
             <button 

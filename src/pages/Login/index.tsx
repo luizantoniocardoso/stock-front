@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom"
 import { LoginCard } from "@/components/LoginCard"
 import { Forms } from "@/components/Forms"
 import { useFetch } from "@/Hooks/useFetch"
+import { useLocalStorage } from "@/Hooks"
 
 
 export const Login = () => {
@@ -12,6 +13,7 @@ export const Login = () => {
     const [errorInput, setErrorInput] = useState(false);
     const [response, fetchData] = useFetch();
     
+    const [dataStorage,  setLocalStorageValue, clearLocalStorage] = useLocalStorage('token', null);
     const navigate = useNavigate();
 
     const refEmail = useRef<HTMLInputElement>(null);
@@ -33,7 +35,8 @@ export const Login = () => {
 
     const handleLogin = async (e: MouseEvent<HTMLButtonElement>) => {
         e.preventDefault();
-        console.log('coisartaada');
+        if (!email || !password) return setErrorInput(true)
+        
         await fetchData('https://tiagos-stock.up.railway.app/auth', {
             method: 'POST',
             headers: {
@@ -46,6 +49,12 @@ export const Login = () => {
                 }
             )
         })
+
+        if(response.error) return setErrorInput(true)
+        if (response.data){
+            setLocalStorageValue(response.data)
+            navigate('/home')
+        }
         
     };
 
