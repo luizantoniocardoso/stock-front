@@ -75,7 +75,7 @@ export const Login = () => {
                     <Forms.Divider />
                     <Forms.Button text="Entrar" action={handleLogin}/>
                     <Forms.Text text="Não tem uma conta?">
-                        <Forms.Link href="/home" text=" Cadastre-se"/>
+                        <Forms.Link href="/register" text=" Cadastre-se"/>
                     </Forms.Text>
                 </Forms.Root>
             </LoginCard.Root>

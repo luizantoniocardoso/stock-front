@@ -7,6 +7,7 @@ import "tw-elements-react/dist/css/tw-elements-react.min.css";
 import { Home } from "../pages/Home";
 
 import { MainLayout } from "@/Layouts/MainLayout";
+import { Register } from "@/pages/Register";
 
   const router = createBrowserRouter([
     {
@@ -17,6 +18,11 @@ import { MainLayout } from "@/Layouts/MainLayout";
       path: "/login",
       element: <Login />,
     },
+    {
+      path: "/register",
+      element: <Register />,
+    },
+    
     { 
       path: "/home",
       element: <MainLayout><Home/></MainLayout>,
