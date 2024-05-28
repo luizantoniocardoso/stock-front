@@ -6,6 +6,7 @@ import { FormsLink } from "./FormsLink";
 import { FormsRoot } from "./FormsRoot";
 import { FormsSmallText } from "./FormsSmallText";
 import { FormsText } from "./FormsText";
+import { FormsTitle } from "./FormsTitle";
 
 
 
@@ -18,6 +19,6 @@ export const Forms = {
     Link: FormsLink,
     Small: FormsSmallText,
     Text: FormsText,
-    Root: FormsRoot
-
+    Root: FormsRoot,
+    Title: FormsTitle,
 }

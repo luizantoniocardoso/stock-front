@@ -2,72 +2,69 @@ import { ChangeEvent, MouseEvent, useEffect, useRef, useState } from "react"
 import { useNavigate } from "react-router-dom"
 import { LoginCard } from "@/components/LoginCard"
 import { Forms } from "@/components/Forms"
-import { useFetch } from "@/Hooks/useFetch"
-import { useLocalStorage } from "@/Hooks"
+import { useLocalStorage, useFetch } from "@/Hooks"
+import { loginSchema, LoginSchema } from "@/Schemas"
+
+
 
 
 export const Login = () => {
     const [showPassword, setShowPassword] = useState(false);
-    const [password, setPassword] = useState("");
-    const [email, setEmail] = useState("");
-    const [errorInput, setErrorInput] = useState(false);
+    const [login, setLogin] = useState<LoginSchema>({email: '', password: ''});
     const [response, fetchData] = useFetch();
-    
-    const [dataStorage,  setLocalStorageValue, clearLocalStorage] = useLocalStorage('token', null);
+    const [error , setError] = useState({email: '', password: ''})
+
+
+    // const [dataStorage,  setLocalStorageValue, clearLocalStorage] = useLocalStorage('token', null);
     const navigate = useNavigate();
 
     const refEmail = useRef<HTMLInputElement>(null);
     const refPassword = useRef<HTMLInputElement>(null);
 
-    const handleEmailChange = (e: ChangeEvent<HTMLInputElement>) => setEmail(e.target.value)
-    const handlePasswordChange = (e: ChangeEvent<HTMLInputElement>) => setPassword(e.target.value)
-    
-    useEffect(() => {
-        setErrorInput(false)
-    }, [password, email])
+    const handleEmailChange = (e: ChangeEvent<HTMLInputElement>) => setLogin( {...login, email: e.target.value})
+    const handlePasswordChange = (e: ChangeEvent<HTMLInputElement>) => setLogin( {...login, password: e.target.value})
 
     const handleCheckBoxChange = () => {
-        setShowPassword(!showPassword)
-        refPassword.current?.focus()
-        if(showPassword) return refPassword.current?.setAttribute("type", "password")
-        return refPassword.current?.setAttribute("type", "text")
+        setShowPassword(!showPassword);
+        refPassword.current?.focus();
+        if(showPassword) return refPassword.current?.setAttribute("type", "password");
+        return refPassword.current?.setAttribute("type", "text");
     }
 
     const handleLogin = async (e: MouseEvent<HTMLButtonElement>) => {
         e.preventDefault();
-        if (!email || !password) return setErrorInput(true)
-        
-        await fetchData('https://tiagos-stock.up.railway.app/auth', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(
-                {
-                    email,
-                    senha: password
-                }
-            )
-        })
+        const loginSchemaValidator = loginSchema.safeParse(login)
 
-        if(response.error) return setErrorInput(true)
+        if(!loginSchemaValidator.success){
+            setError( { 
+                email: loginSchemaValidator.error.formErrors.fieldErrors.email ? loginSchemaValidator.error.formErrors.fieldErrors.email[0] : '',
+                password: loginSchemaValidator.error.formErrors.fieldErrors.password ? loginSchemaValidator.error.formErrors.fieldErrors.password[0] : ''
+            });
+            return;
+        }
+        setError({email: '', password: ''})
+        const url = 'https://tiagos-stock.up.railway.app/auth';
+        const body = JSON.stringify( { email: loginSchemaValidator.data.email, senha: loginSchemaValidator.data.password });
+        const headers = { 'Content-Type': 'application/json' };
+        await fetchData(url, {body, headers, method: 'POST'});
         if (response.data){
-            setLocalStorageValue(response.data)
             navigate('/home')
         }
+        
         
     };
 
     return(
         <section className="flex items-center justify-center w-full h-screen bg-slate-200" >
             <LoginCard.Root>
-                <LoginCard.Img src="img/6.png" alt="Imagem de login" />
+                <LoginCard.Img src="img/1.png" alt="Imagem de login" />
                 <Forms.Root>
-                    <Forms.Input id="emailInput" arialabel="Email" type="text" placeholder="Email" ref={refEmail} onChangeAction={handleEmailChange} value={email}>
-                     {errorInput && <Forms.Small id="emailInput" text="Verifique se o Email esta correto" />}
+                    <Forms.Title text="Bem-vindo" size='4rem'/>
+                    <Forms.Input id="emailInput" arialabel="Email" type="text" placeholder="Email" ref={refEmail} onChangeAction={handleEmailChange} value={login.email}>
+                     {error.email && <Forms.Small id="emailInput" text={error.email} />}
                     </Forms.Input>
-                    <Forms.Input id="passwordInput" arialabel="Senha" type="password" placeholder="Senha" ref={refPassword} onChangeAction={handlePasswordChange} value={password}>
-                     {errorInput && <Forms.Small id="passwordInp ut" text="Verifique se a senha esta correta" />}
+                    <Forms.Input id="passwordInput" arialabel="Senha" type="password" placeholder="Senha" ref={refPassword} onChangeAction={handlePasswordChange} value={login.password}>
+                     {error.password && <Forms.Small id="passwordInput" text={error.password} />}
                     </Forms.Input>
                     <Forms.CheckBox id="senha" content="Mostrar a senha" action={handleCheckBoxChange} checked={showPassword}>
                         <Forms.Link href="/home" text="Esqueceu a senha?"/>
