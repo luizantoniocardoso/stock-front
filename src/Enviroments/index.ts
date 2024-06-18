@@ -1,1 +1,6 @@
-export const api = 'https://api-stocksense-production.up.railway.app'
+
+
+export const api = {
+    url: 'https://api-stocksense-production.up.railway.app',
+    token: ''
+}

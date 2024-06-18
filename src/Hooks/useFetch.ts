@@ -1,17 +1,10 @@
 import { useState } from 'react';
 
-
-
-
-
 type FetchResponse<T> = {
   data: T | null;
-  error: any;
+  error: unknown | null;
   isLoading: boolean;
 };
-
-
-
 interface FetchOptions {
   method?: 'GET' | 'POST' | 'PUT' | 'DELETE';
   headers?: Record<string, string>;

@@ -12,7 +12,8 @@ export default defineConfig({
       '@Schemas': '/src/Schemas',
       '@Pages': '/src/Pages',
       '@layouts': '/src/Layouts',
-      '@env': '/src/Enviroments.ts'
+      '@env': '/src/Enviroments.ts',
+      '@Contexts': '/src/Contexts',
     }
   }
 })

@@ -1,22 +1,30 @@
-import { ChangeEvent, MouseEvent, useRef, useState } from "react"
+import { ChangeEvent, MouseEvent, useEffect, useRef, useState } from "react"
 import { useNavigate } from "react-router-dom"
 import { LoginCard } from "@/components/LoginCard"
 import { Forms } from "@/components/Forms"
 import { useFetch } from "@/Hooks"
 import { loginSchema, LoginSchema } from "@/Schemas"
 import { api } from "@/Enviroments"
+import { useAuth } from "@/Contexts"
 
+
+interface DataAuth {
+    menssage: string;
+    token: string;
+    empresa: number;
+  }
 
 
 
 export const Login = () => {
     const [showPassword, setShowPassword] = useState(false);
     const [login, setLogin] = useState<LoginSchema>({email: '', password: ''});
-    const [response, fetchData] = useFetch();
+    const [authResponse, authfetchData] = useFetch();
     const [error , setError] = useState({email: '', password: ''})
 
     // const [dataStorage,  setLocalStorageValue, clearLocalStorage] = useLocalStorage('token', null);
     const navigate = useNavigate();
+    const auth = useAuth();
 
     const refEmail = useRef<HTMLInputElement>(null);
     const refPassword = useRef<HTMLInputElement>(null);
@@ -43,17 +51,20 @@ export const Login = () => {
             return;
         }
         setError({email: '', password: ''})
-        const url = `${api}/auth`;
+        const url = `${api.url}/auth`;
         const body = JSON.stringify( { email: loginSchemaValidator.data.email, senha: loginSchemaValidator.data.password });
         const headers = { 'Content-Type': 'application/json' };
-        await fetchData(url, {body, headers, method: 'POST'});
-        if (response.data){
-            navigate('/home')
-            
-        }
-        
-        
+        await authfetchData(url, {body, headers, method: 'POST'});  
     };
+
+
+    useEffect(() => {
+        if (authResponse.data){
+            auth?.login(authResponse?.data as DataAuth);        
+            navigate('/home');
+        }
+    }, [authResponse.data, auth, navigate])
+    
 
     return(
         <section className="flex items-center justify-center w-full h-screen bg-slate-200" >
