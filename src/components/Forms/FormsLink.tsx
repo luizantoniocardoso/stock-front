@@ -8,7 +8,7 @@ interface FormsLinkProps {
   
   export const FormsLink = ({href, text}: FormsLinkProps) => {
     return (
-      <Link to={href} className="text-primary focus:outline-none dark:text-primary-400">
+      <Link to={href} className="text-contrastVar focus:outline-none dark:text-contrastVar">
         {text}
       </Link>
     )

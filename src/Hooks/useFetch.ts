@@ -1,15 +1,21 @@
 import { useState } from 'react';
 
+
+
+
+
 type FetchResponse<T> = {
   data: T | null;
-  error: any | null;
+  error: any;
   isLoading: boolean;
 };
+
+
 
 interface FetchOptions {
   method?: 'GET' | 'POST' | 'PUT' | 'DELETE';
   headers?: Record<string, string>;
-  body?: any;
+  body?: string;
 }
 
 export const useFetch = <T>() => {

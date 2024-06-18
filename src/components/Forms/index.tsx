@@ -1,4 +1,5 @@
 import { FormsButton } from "./FormsButton";
+import { FormsTitle } from "./FormsButtonTitle";
 import { FormsCheckBox } from "./FormsCheckBox";
 import { FormsDivider } from "./FormsDivider";
 import { FormsInput } from "./FormsInput";
@@ -18,6 +19,7 @@ export const Forms = {
     Link: FormsLink,
     Small: FormsSmallText,
     Text: FormsText,
-    Root: FormsRoot
+    Root: FormsRoot,
+    Title: FormsTitle,
 
 }

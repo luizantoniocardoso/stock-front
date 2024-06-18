@@ -7,7 +7,7 @@ interface FormsSmallTextProps {
 
 export const FormsSmallText = ({text, id}: FormsSmallTextProps) => {
     return(
-        <small id={id} className="absolute w-full text-red-600 dark:text-red-600" >
+        <small id={id} className="absolute w-full text-warningVar dark:text-warningVar">
             {text}
         </small>
     )

@@ -12,7 +12,7 @@ interface FormsInputProps {
   children?: React.ReactNode;
   ref: React.RefObject<HTMLInputElement>;
   onChangeAction: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  value: string;
+  value: string | number | readonly string[] | undefined;
 }
 
 
