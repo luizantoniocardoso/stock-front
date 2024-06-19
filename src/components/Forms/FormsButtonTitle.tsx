@@ -6,10 +6,10 @@ interface FormsTitleProps {
     size?: number;
 }
 
-export const FormsTitle = ({text, size = 16}: FormsTitleProps) => {
+export const FormsTitle = ({text, size = 4}: FormsTitleProps) => {
     return (
         <h1 className={`relative w-full mb-6 text-center text-[${size}px]`} >
-        {text}    
+            {text}    
         </h1>
     )
 }

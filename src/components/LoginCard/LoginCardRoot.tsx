@@ -9,13 +9,13 @@ interface LoginCardRootProps {
 
 export const LoginCardRoot = ({ children }: LoginCardRootProps ) => {
     return (
-        <section className="h-screen">
-            <div className="container flex items-center justify-center h-full px-6 py-24">
-                <div className="flex flex-wrap items-center justify-center h-auto g-6 lg:justify-between bg-backgroundVar-CONTRA rounded-2xl" >
-                    <div className="mb-12 md:mb-0 md:w-8/12 lg:w-6/12">
+        <section className="flex items-center justify-center w-full h-full">
+            <div className="container flex items-center justify-center h-full px-6 py-24 w-[100%]">
+                <div className="flex flex-wrap items-center justify-center g-6 lg:justify-between bg-backgroundVar-CONTRA rounded-2xl w-[100%]" >
+                    <div className="h-[41rem] mb-12 md:mb-0 md:w-8/12 lg:w-5/12">
                         {children[0]}
                     </div>
-                    <div className="md:w-8/12 lg:ml-6 lg:w-5/12">
+                    <div className="pt-10 pb-10 md:w-8/12 lg:ml-6 lg:w-6/12">
                         {children[1]}
                     </div>
                 </div>

@@ -22,7 +22,6 @@ export const Login = () => {
     const [authResponse, authfetchData] = useFetch();
     const [error , setError] = useState({email: '', password: ''})
 
-    // const [dataStorage,  setLocalStorageValue, clearLocalStorage] = useLocalStorage('token', null);
     const navigate = useNavigate();
     const auth = useAuth();
 
@@ -67,7 +66,7 @@ export const Login = () => {
     
 
     return(
-        <section className="flex items-center justify-center w-full h-screen bg-slate-200" >
+        <section className="flex items-center justify-center w-full h-screen bg-backgroundVar" >
             <LoginCard.Root>
                 <LoginCard.Img src="img/1.png" alt="Imagem de login" />
                 <Forms.Root>

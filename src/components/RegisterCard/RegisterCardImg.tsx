@@ -8,7 +8,7 @@ export const RegisterCardImg = ({ src, alt }: RegisterCardImgProps) => {
     return (
         <img
               src={src}
-              className="object-cover h-[100%] w-[100%]"
+              className="h-[100%] rounded-s-2xl"
               alt={alt}
         />
     )
