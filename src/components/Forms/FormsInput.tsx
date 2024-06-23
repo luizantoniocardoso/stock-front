@@ -10,9 +10,9 @@ interface FormsInputProps {
   placeholder: string;
   arialabel: string;
   children?: React.ReactNode;
-  ref: React.RefObject<HTMLInputElement>;
-  onChangeAction: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  value: string | number | readonly string[] | undefined;
+  ref?: React.RefObject<HTMLInputElement>;
+  onChangeAction?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  value?: string | number | readonly string[] | undefined;
 }
 
 

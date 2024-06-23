@@ -15,7 +15,7 @@ export const LoginCardRoot = ({ children }: LoginCardRootProps ) => {
                     <div className="h-[41rem] mb-12 md:mb-0 md:w-8/12 lg:w-5/12">
                         {children[0]}
                     </div>
-                    <div className="pt-10 pb-10 md:w-8/12 lg:ml-6 lg:w-6/12">
+                    <div className="pt-10 pb-10 mr-16 md:w-8/12 lg:w-4/12 xl:w-5/12" >
                         {children[1]}
                     </div>
                 </div>

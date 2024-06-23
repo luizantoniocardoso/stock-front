@@ -16,7 +16,7 @@ export const RegisterCardRoot = ({ children }: RegisterCardRootProps ) => {
                     <div className="h-[41rem]">
                         {children[0]}
                     </div>
-                    <div className="pt-10 pb-10 md:w-8/12 lg:w-4/12 xl:w-5/12" >
+                    <div className="pt-10 pb-10 mr-16 md:w-8/12 lg:w-4/12 xl:w-5/12" >
                         {children[1]}
                     </div>
                 </div>

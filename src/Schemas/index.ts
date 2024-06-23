@@ -1,9 +1,11 @@
-import { loginSchema, LoginSchema } from "./loginSchema";
-import { cadastroUserSchema, CadastroUserSchema } from "./cadastroUserSchema";
+import { CadastroUserSchema, cadastroUserSchema } from "./cadastroUserSchema";
+import { forgetPasswordSchema, ForgetPasswordSchema} from "./forgetPassword";
+import { LoginSchema, loginSchema } from "./loginSchema";
 
-export type { LoginSchema, CadastroUserSchema };
+export type { LoginSchema, CadastroUserSchema, ForgetPasswordSchema };
 
 export {
     loginSchema,
-    cadastroUserSchema
+    cadastroUserSchema,
+    forgetPasswordSchema,
 };

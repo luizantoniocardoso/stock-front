@@ -1,6 +1,6 @@
-import { Forms } from "@/components/Forms";
-import { RegisterCard } from "@/components/RegisterCard";
-import { Alert } from "@/components/Alert";
+import { RegisterCard, Forms } from "@/Components";
+
+import { Alert } from "@/Components/Alert";
 import { useFetch } from "@/Hooks";
 import { cadastroUserSchema, CadastroUserSchema } from "@/Schemas";
 import { ChangeEvent, MouseEvent, useRef, useState } from "react";
@@ -97,7 +97,7 @@ export const Register = () => {
             cpf: "",
         });
 
-        const url = `${api}/usuario`;
+        const url = `${api.url}/usuario`;
         const body = JSON?.stringify({
             email: cadastroSchemaValidator?.data?.email,
             senha: cadastroSchemaValidator?.data?.password,
