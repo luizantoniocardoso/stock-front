@@ -2,7 +2,7 @@ import { useState } from 'react';
 
 type FetchResponse<T> = {
   data: T | null;
-  error: unknown | null;
+  error:  unknown;
   isLoading: boolean;
 };
 interface FetchOptions {
@@ -29,7 +29,11 @@ export const useFetch = <T>() => {
 
     } 
     catch (error) {
+      if (error instanceof Error) {
         setResponse({ data: null, error, isLoading: false });
+        return;
+      } 
+      setResponse({ data: null, error , isLoading: false });
     }
   };
 

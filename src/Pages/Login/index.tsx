@@ -1,12 +1,11 @@
 import { ChangeEvent, MouseEvent, useEffect, useRef, useState } from "react"
+
+import { ForgotPassword, Forms, LoginCard } from "@/Components"
+
 import { useNavigate } from "react-router-dom"
-import { LoginCard } from "@/components/LoginCard"
-import { Forms } from "@/components/Forms"
-import { useFetch } from "@/Hooks"
+import { useFetch, useAuth } from "@/Hooks"
 import { loginSchema, LoginSchema } from "@/Schemas"
 import { api } from "@/Enviroments"
-import { useAuth } from "@/Contexts"
-
 
 interface DataAuth {
     menssage: string;
@@ -14,15 +13,13 @@ interface DataAuth {
     empresa: number;
   }
 
-
-
 export const Login = () => {
     const [showPassword, setShowPassword] = useState(false);
     const [login, setLogin] = useState<LoginSchema>({email: '', password: ''});
     const [authResponse, authfetchData] = useFetch();
     const [error , setError] = useState({email: '', password: ''})
+    const [isModalOpen, setIsModalOpen] = useState(false);	
 
-    // const [dataStorage,  setLocalStorageValue, clearLocalStorage] = useLocalStorage('token', null);
     const navigate = useNavigate();
     const auth = useAuth();
 
@@ -67,7 +64,7 @@ export const Login = () => {
     
 
     return(
-        <section className="flex items-center justify-center w-full h-screen bg-slate-200" >
+        <section className="flex items-center justify-center w-full h-screen bg-backgroundVar" >
             <LoginCard.Root>
                 <LoginCard.Img src="img/1.png" alt="Imagem de login" />
                 <Forms.Root>
@@ -79,15 +76,16 @@ export const Login = () => {
                      {error.password && <Forms.Small id="passwordInput" text={error.password} />}
                     </Forms.Input>
                     <Forms.CheckBox id="senha" content="Mostrar a senha" action={handleCheckBoxChange} checked={showPassword}>
-                        <Forms.Link href="/home" text="Esqueceu a senha?"/>
+                        <Forms.TextContrast text="Esqueceu a senha?" onClick={() => setIsModalOpen(true)}/>
                     </Forms.CheckBox>
                     <Forms.Divider />
                     <Forms.Button text="Entrar" action={handleLogin}/>
-                    <Forms.Text text="Não tem uma conta?">
+                    <Forms.Text text="Não tem uma conta?" >
                         <Forms.Link href="/register" text=" Cadastre-se"/>
                     </Forms.Text>
                 </Forms.Root>
             </LoginCard.Root>
+            <ForgotPassword isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen}/>
         </section>
     )
 }

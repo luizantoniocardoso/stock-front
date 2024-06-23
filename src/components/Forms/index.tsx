@@ -7,6 +7,7 @@ import { FormsLink } from "./FormsLink";
 import { FormsRoot } from "./FormsRoot";
 import { FormsSmallText } from "./FormsSmallText";
 import { FormsText } from "./FormsText";
+import { FormsTextContraste } from "./FormTextContraste";
 
 
 
@@ -21,5 +22,5 @@ export const Forms = {
     Text: FormsText,
     Root: FormsRoot,
     Title: FormsTitle,
-
+    TextContrast: FormsTextContraste
 }
