@@ -23,7 +23,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
                 empresa: parseInt(empresa)
             };
         }
-        console.log(dataLogin, 'dataLogin', isAuthenticated, 'isAuthenticated')
         return null;
     };
 
@@ -41,7 +40,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         setItem('empresa', data.empresa.toString());
         setDataLogin(data);
         setIsAuthenticated(true);
-        console.log(data, 'data', dataLogin, 'dataLogin', isAuthenticated, 'isAuthenticated');
     };
     
     const logout = () => {
