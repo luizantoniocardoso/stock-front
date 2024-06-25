@@ -1,1 +1,2 @@
-export{ AuthProvider, AuthContext } from './AuthContext';
+export { AuthContext } from './AuthContext';
+export { AlertContext } from './AlertContext';

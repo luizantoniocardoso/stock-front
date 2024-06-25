@@ -1,6 +1,3 @@
-
-
-
 interface LoginCardImgProps {
     src: string;
     alt: string;

@@ -1,6 +1,3 @@
-
-
-
 interface FormsTitleProps {
     text: string;
     size?: number;

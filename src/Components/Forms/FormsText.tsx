@@ -1,5 +1,3 @@
-
-
 interface FormsTextProps {
     children?: React.ReactNode;
     text: string;
