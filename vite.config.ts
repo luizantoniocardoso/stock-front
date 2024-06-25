@@ -7,13 +7,6 @@ export default defineConfig({
   resolve: {
     alias: {
       '@': '/src',
-      '@Components': '/src/Components',
-      '@Hooks': '/src/Hooks',
-      '@Schemas': '/src/Schemas',
-      '@Pages': '/src/Pages',
-      '@layouts': '/src/Layouts',
-      '@env': '/src/Enviroments.ts',
-      '@Contexts': '/src/Contexts',
     }
   }
 })

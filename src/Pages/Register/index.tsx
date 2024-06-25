@@ -1,31 +1,15 @@
 import { RegisterCard, Forms } from "@/Components";
 
-import { Alert } from "@/Components/Alert";
-import { useFetch } from "@/Hooks";
+import { useAlert, useFetch } from "@/Hooks";
 import { cadastroUserSchema, CadastroUserSchema } from "@/Schemas";
 import { ChangeEvent, MouseEvent, useRef, useState } from "react";
 import { api } from "@/Enviroments";
 import { useNavigate } from "react-router-dom";
 
-interface alertInterface {
-    type: "success" | "danger" | "warning" | "info";
-    time: number;
-    text: string;
-    title: string;
-}
 
 export const Register = () => {
     const [showPassword, setShowPassword] = useState(false);
     const [response, fetchData] = useFetch();
-    const [alert, setAlert] = useState<alertInterface>({
-        type: "success",
-        time: 5000,
-        text: "",
-        title: "",
-    });
-
-    const [open, setOpen] = useState(false);
-
     const [cadastro, setCadastro] = useState<CadastroUserSchema>({
         email: "",
         password: "",
@@ -34,6 +18,7 @@ export const Register = () => {
         cpf: "",
     });
 
+    const alert = useAlert();
     const [error, setError] = useState({
         email: "",
         password: "",
@@ -106,15 +91,15 @@ export const Register = () => {
         });
         const headers = { "Content-Type": "application/json" };
         await fetchData(url, { body, headers, method: "POST" });
-
-        if (!response?.data) {
-            setAlert({
+        console.log(response);
+        if (response?.error) {
+            alert.openAlert({
                 type: "danger",
                 time: 5000,
-                text: "Usuario já cadastrado",
+                text: "Erro ao cadastrar usuario",
                 title: "Erro",
+                onCloseAlert: () => {},
             });
-            setOpen(true);
             return;
         }
 
@@ -125,21 +110,16 @@ export const Register = () => {
             nome: "",
             cpf: "",
         });
-        setAlert({
+        alert.openAlert({
             type: "success",
             time: 5000,
-            text: "Cadastro realizado com sucesso",
+            text: "Usuario cadastrado com sucesso",
             title: "Sucesso",
+            onCloseAlert: () => {
+                navigate("/login");
+            },
         });
-        setOpen(true);
         return;
-    };
-
-    const closeAlert = () => {
-        setOpen(false);
-        if (alert?.type === "success") {
-            navigate("/login");
-        }
     };
 
     return (
@@ -222,7 +202,7 @@ export const Register = () => {
                     </Forms.Text>
                 </Forms.Root>
             </RegisterCard.Root>
-            <Alert.Root
+            {/* <Alert.Root
                 open={open}
                 setOpen={setOpen}
                 time={alert?.time}
@@ -231,7 +211,7 @@ export const Register = () => {
             >
                 <Alert.Title title={alert?.title} />
                 <Alert.Content text={alert?.text} />
-            </Alert.Root>
+            </Alert.Root> */}
         </section>
     );
 };

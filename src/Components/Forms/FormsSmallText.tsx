@@ -1,4 +1,3 @@
-
 interface FormsSmallTextProps {
     text: string;
     id: string;

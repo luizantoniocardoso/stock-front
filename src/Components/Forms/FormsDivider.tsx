@@ -1,8 +1,3 @@
-
-
-
-
-
 interface FormsDividerProps {
     text?: string;
 }

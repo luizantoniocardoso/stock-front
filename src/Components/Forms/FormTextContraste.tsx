@@ -1,5 +1,3 @@
-
-
 interface FormsTextContrasteProps {
     text: string;
     onClick?: () => void;

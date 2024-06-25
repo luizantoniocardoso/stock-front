@@ -1,11 +1,8 @@
 
 import { createBrowserRouter } from "react-router-dom";
-import { Login } from "../Pages/Login";
 import "tw-elements-react/dist/css/tw-elements-react.min.css";
-import { Register } from "@/Pages/Register";
-import { Home } from "@/Pages/Home";
 import {ProtectedRoute} from "./ProtectedRoute";
-
+import { Login, Home, Register } from "@/Pages";
 
   const router = createBrowserRouter([
     {

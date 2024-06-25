@@ -1,20 +1,27 @@
-import { useState } from 'react';
+import { useCallback } from "react";
 
-export const useLocalStorage = (key: string, initialValue: any) => {
-    const [value, setValue] = useState(() => {
-        const storedValue = localStorage.getItem(key);
-        return storedValue ? JSON.parse(storedValue) : initialValue;
-    });
+type UseLocalStorageReturn = {
+    setItem: (key: string, value: string) => void;
+    getItem: (key: string) => string | null;
+    removeItem: (key: string) => void;
+};
 
-    const setLocalStorageValue = (newValue: any) => {
-        setValue(newValue);
-        localStorage.setItem(key, JSON.stringify(newValue));
-    };
+export const useLocalStorage = (): UseLocalStorageReturn => {
+    const setItem = useCallback((key: string, value: string) => {
+        localStorage.setItem(key, value);
+    }, []);
 
-    const clearLocalStorage = () => {
-        setValue(initialValue);
+    const getItem = useCallback((key: string) => {
+        return localStorage.getItem(key);
+    }, []);
+
+    const removeItem = useCallback((key: string) => {
         localStorage.removeItem(key);
-    };
+    }, []);
 
-    return [value, setLocalStorageValue, clearLocalStorage];
+    return {
+        setItem,
+        getItem,
+        removeItem
+    };
 };
