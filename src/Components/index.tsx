@@ -5,6 +5,6 @@ import { LoginCard } from "./LoginCard";
 import { Modal } from "./Modal";
 import { RegisterCard } from "./RegisterCard";
 import { Topbar } from "./Topbar";
-import { Dropdown } from "./Dropdown";
+import { Sidebar } from "./Sidebar";
 
-export { Alert, Forms, Modal, LoginCard, RegisterCard, ForgotPassword, Topbar, Dropdown};
+export { Alert, Forms, Modal, LoginCard, RegisterCard, ForgotPassword, Topbar, Sidebar};

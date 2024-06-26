@@ -1,6 +1,3 @@
-
-
-
 interface TopbarRootProps {
     children: React.ReactNode;
 }
@@ -8,7 +5,7 @@ interface TopbarRootProps {
 export const TopbarRoot = ({ children }: TopbarRootProps ) => {
 
     return (
-        <header className="flex justify-between w-full h-16">
+        <header className="flex justify-between w-full h-16 shadow-xl bg-backgroundVar ">
             {children}
         </header>
     )

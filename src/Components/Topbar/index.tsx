@@ -8,5 +8,5 @@ export const Topbar = {
     Root: TopbarRoot,
     Logo: TopbarLogo,
     Nav: TopbarNav,
-    User: TopbarUser
+    User: TopbarUser,
 }

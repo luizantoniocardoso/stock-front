@@ -3,6 +3,7 @@ import { createBrowserRouter } from "react-router-dom";
 import "tw-elements-react/dist/css/tw-elements-react.min.css";
 import {ProtectedRoute} from "./ProtectedRoute";
 import { Login, Home, Register } from "@/Pages";
+import { MainLayout } from "@/Layouts/MainLayout";
 
   const router = createBrowserRouter([
     {
@@ -20,7 +21,7 @@ import { Login, Home, Register } from "@/Pages";
     
     { 
       path: "/home",
-      element: <ProtectedRoute><Home /></ProtectedRoute>
+      element: <ProtectedRoute><MainLayout><Home/></MainLayout></ProtectedRoute>
     }
   ]);
 
