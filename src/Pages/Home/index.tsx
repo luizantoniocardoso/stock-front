@@ -1,4 +1,4 @@
-import { Topbar } from "@/Components"
+import { Dropdown, Topbar } from "@/Components"
 
 
 export const Home = () => {
@@ -13,6 +13,7 @@ export const Home = () => {
             <Topbar.User user="https://i.pravatar.cc/300" />
         </Topbar.Root>
             <div className="flex flex-col items-center justify-center h-screen bg-backgroundVar">
+                <Dropdown></Dropdown>
             </div>
         </>
       
