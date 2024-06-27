@@ -3,7 +3,7 @@ import { useAuth } from "@/Hooks";
 import React, { useEffect, useState } from "react";
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faHome, faUser, faCog } from '@fortawesome/free-solid-svg-icons';
+import { faHome, faUser, faCog, faBriefcase, faUsers } from '@fortawesome/free-solid-svg-icons';
 
 export const MainLayout = ({ children }: { children: React.ReactNode }) => {
     const auth = useAuth();
@@ -33,6 +33,8 @@ export const MainLayout = ({ children }: { children: React.ReactNode }) => {
                 <Sidebar.Root>
                     <div className="flex flex-col">
                         <Sidebar.Item to="/home" description="Pagina principal"><FontAwesomeIcon icon={faHome} /></Sidebar.Item>
+                        <Sidebar.Item to="/estoque" description="Cadastro de Estoque"><FontAwesomeIcon icon={faBriefcase} /> </Sidebar.Item>
+                        <Sidebar.Item to="/users" description="Cadastro de Usuarios"><FontAwesomeIcon icon={faUsers} /> </Sidebar.Item>
                         <Sidebar.Item to="/profile" description="Perfil"><FontAwesomeIcon icon={faUser} /> </Sidebar.Item>
                     </div>
                     <div className="mt-auto">

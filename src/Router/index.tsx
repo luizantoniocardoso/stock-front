@@ -2,7 +2,7 @@
 import { createBrowserRouter } from "react-router-dom";
 import "tw-elements-react/dist/css/tw-elements-react.min.css";
 import {ProtectedRoute} from "./ProtectedRoute";
-import { Login, Home, Register } from "@/Pages";
+import { Login, Home, Register, CadastroEstoque, Perfil, CadastroUsers } from "@/Pages";
 import { MainLayout } from "@/Layouts/MainLayout";
 
   const router = createBrowserRouter([
@@ -22,7 +22,20 @@ import { MainLayout } from "@/Layouts/MainLayout";
     { 
       path: "/home",
       element: <ProtectedRoute><MainLayout><Home/></MainLayout></ProtectedRoute>
+    },
+    {
+      path: "/estoque",
+      element: <ProtectedRoute><MainLayout><CadastroEstoque/></MainLayout></ProtectedRoute>
+    },
+    {
+      path: "/users",
+      element: <ProtectedRoute><MainLayout><CadastroUsers/></MainLayout></ProtectedRoute>
+    },
+    {
+      path: "/profile",
+      element: <ProtectedRoute><MainLayout><Perfil/></MainLayout></ProtectedRoute>
     }
+
   ]);
 
 export default router;

@@ -89,7 +89,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         if (dataLogin && isAuthenticated) {
             getEmpresaData();
             getUserData();
+            return 
         }
+        logout();
     }, [dataLogin, isAuthenticated, !responseEmpresa.data, !responseUser.data]);
 
     return (
