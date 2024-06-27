@@ -103,6 +103,10 @@ export function CadastroUsers() {
             <Forms.Root>
               <Forms.Title text='Adicionar Usuario' aling='center'/>
               <Forms.Input id='nome' type='text' arialabel='Nome' placeholder='Nome' />
+              <Forms.Input id='cpf' type='text' arialabel='Cpf' placeholder='Cpf' />
+              <Forms.Input id='email' type='email' arialabel='Email' placeholder='Email' />
+              <Forms.Input id='senha' type='password' arialabel='Senha' placeholder='Senha' />
+              {/* <Forms.Select id='cargo' arialabel='Cargo' placeholder='Cargo' /> */}
             </Forms.Root>
           </Modal.Body>
       </Modal.Root>
