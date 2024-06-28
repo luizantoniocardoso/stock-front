@@ -1,6 +1,6 @@
 
 
 export const api = {
-    url: 'https://api-stocksense-production.up.railway.app',
+    url: 'http://localhost:3333',
     token: ''
 }

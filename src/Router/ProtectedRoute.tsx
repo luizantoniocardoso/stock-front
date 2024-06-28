@@ -8,10 +8,7 @@ interface ProtectedRouteProps {
 
 export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({children}) => {
     const { isAuthenticated } = useAuth();
- 
     const navigate = useNavigate();
-
-
 
     useEffect(() => {
         if (!isAuthenticated) {

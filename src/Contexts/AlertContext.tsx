@@ -1,6 +1,5 @@
 import { createContext } from "react";
 
-
 type AlertContextType = "success" | "danger" | "warning" | "info";
 
 interface AlertContextOpenAlert {
@@ -11,15 +10,12 @@ interface AlertContextOpenAlert {
   onCloseAlert: () => void;
 }
 
-
 interface AlertContextProps {
   openAlert: (alert: AlertContextOpenAlert) => void;
 }
 
 const initialStateAlert: AlertContextProps = {
-  openAlert: () => { 
-    console.log("Alerta aberto");
-  },
+  openAlert: () => {},
 };
 
 export const AlertContext = createContext<AlertContextProps>(initialStateAlert);

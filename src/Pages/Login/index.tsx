@@ -1,15 +1,10 @@
 import { ChangeEvent, MouseEvent, useEffect, useRef, useState } from "react"
 import { ForgotPassword, Forms, LoginCard } from "@/Components"
 import { useNavigate } from "react-router-dom"
-import { useFetch, useAuth, useLocalStorage } from "@/Hooks"
+import { useFetch, useAuth } from "@/Hooks"
 import { loginSchema, LoginSchema } from "@/Schemas"
 import { api } from "@/Enviroments"
-
-interface DataAuth {
-    menssage: string;
-    token: string;
-    empresa: number;
-}
+import { Auth } from "@/Interfaces/Api"
 
 export const Login = () => {
     const [showPassword, setShowPassword] = useState(false);
@@ -17,8 +12,6 @@ export const Login = () => {
     const [authResponse, authfetchData] = useFetch();
     const [error , setError] = useState({email: '', password: ''})
     const [isModalOpen, setIsModalOpen] = useState(false);	
-
-    const { setItem } = useLocalStorage();
 
     const navigate = useNavigate();
     const auth = useAuth();
@@ -57,7 +50,7 @@ export const Login = () => {
 
     useEffect(() => {
         if (authResponse.data){
-            auth?.login(authResponse?.data as DataAuth);        
+            auth?.login(authResponse?.data as Auth);        
             navigate('/home');
         }
     }, [authResponse.data, auth, navigate])
