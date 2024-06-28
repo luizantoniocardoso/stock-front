@@ -3,6 +3,7 @@ import { api } from '@/Enviroments';
 import { useAlert, useAuth, useFetch } from '@/Hooks';
 import { CargoResponse, User, UserResponse } from '@/Interfaces/Api';
 import { ChangeEvent, useEffect, useState } from 'react';
+
 import { SelectData } from 'tw-elements-react/dist/types/forms/Select/types';
 import { adicionarUserSchema, AdicionarUserSchema } from '@/Schemas';
 
@@ -18,7 +19,7 @@ interface EstoqueFormData {
   
 }
 
-export function CadastroEstoque() {
+export function CadastroProduto() {
   const [data, setData] = useState<User[]>([]);
   const [filteredData, setFilteredData] = useState<User[]>([]);
   const [page, setPage] = useState(1);

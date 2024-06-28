@@ -7,7 +7,7 @@ import { RegisterCard } from "./RegisterCard";
 import { Topbar } from "./Topbar";
 import { Sidebar } from "./Sidebar";
 import { Table } from "./Table";
-
+import { Content } from "./Content";
 export { 
     Alert,
     Forms,
@@ -18,4 +18,5 @@ export {
     Topbar,
     Sidebar,
     Table,
+    Content,
 };
