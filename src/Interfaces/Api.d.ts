@@ -45,3 +45,7 @@ export interface UserResponse {
 export interface EmpresaResponse {
     companies: Empresa[];
 }
+
+export interface CargoResponse {
+    cargos: Cargo[];
+}
