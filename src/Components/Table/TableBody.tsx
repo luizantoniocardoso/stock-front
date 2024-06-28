@@ -7,7 +7,7 @@ interface TableBodyProps {
 
 export const TableBody = ({ children }:TableBodyProps) => {
     return (
-        <tbody>
+        <tbody className="max-h-[50rem]">
             {children}
         </tbody>
     )

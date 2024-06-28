@@ -11,8 +11,8 @@ export const adicionarUserSchema = z.object({
    }),
   
    cargo: z.object({
-      id: z.number(),
-      descricao: z.string()
+      value: z.number().refine(value => value !== 999 && value !== 0, {message: 'Cargo inválido'}), 
+      text: z.string()
    })
 })
 

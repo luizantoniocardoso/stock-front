@@ -45,6 +45,7 @@ export const Login = () => {
         const body = JSON.stringify( { email: loginSchemaValidator.data.email, senha: loginSchemaValidator.data.password });
         const headers = { 'Content-Type': 'application/json' };
         await authfetchData(url, {body, headers, method: 'POST'});  
+        console.log(authResponse.data, 'authResponse.data', )
     };
 
 
