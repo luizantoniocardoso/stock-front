@@ -1,11 +1,12 @@
 import { Content, Forms, Modal } from '@/Components';
 import { api } from '@/Enviroments';
 import { useAlert, useAuth, useFetch } from '@/Hooks';
-import { CargoResponse, User, UserResponse } from '@/Interfaces/Api';
+import { CargoResponse, Produto, ProdutoResponse, User, UserResponse } from '@/Interfaces/Api';
 import { ChangeEvent, useEffect, useState } from 'react';
 
 import { SelectData } from 'tw-elements-react/dist/types/forms/Select/types';
 import { adicionarUserSchema, AdicionarUserSchema } from '@/Schemas';
+import { object } from 'zod';
 
 
 interface EstoqueFormData {
@@ -20,15 +21,15 @@ interface EstoqueFormData {
 }
 
 export function CadastroProduto() {
-  const [data, setData] = useState<User[]>([]);
-  const [filteredData, setFilteredData] = useState<User[]>([]);
+  const [data, setData] = useState<Produto[]>([]);
+  const [filteredData, setFilteredData] = useState<Produto[]>([]);
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [search, setSearch] = useState('');
 
   const { dataLogin } = useAuth();
 
-  const [responseEstoque, fetchDataEstoque] = useFetch<UserResponse>();
+  const [responseEstoque, fetchDataEstoque] = useFetch<ProdutoResponse>();
   const [responseCargos, fetchDataCargos] = useFetch<CargoResponse>();
   const [responseAddEstoque, fetchDataAddEstoque] = useFetch<UserResponse>();
   const [responseEditEstoque, fetchDataEditEstoque] = useFetch<UserResponse>();
@@ -51,16 +52,16 @@ export function CadastroProduto() {
   useEffect(() => {
     if (!dataLogin) return;
     const headers = { 'Authorization': `Bearer ${dataLogin?.token}`, 'Content-Type': 'application/json' };
-    const url = `${api.url}/usuario?estoque=${dataLogin.empresa}`
+    const url = `${api.url}/produto?empresa=${dataLogin.empresa}`
     fetchDataEstoque(url, { headers: headers, method: 'GET' })
   },[responseAddEstoque, dataLogin, responseDeleteEstoque, responseEditEstoque])
 
   useEffect(() => {
     if (!responseEstoque) return;
-    setData(responseEstoque.data?.users || []);
+    setData(responseEstoque.data?.products || []);
     console.log(responseEstoque.data, 'responseEstoque.data?.users')
-    setFilteredData(responseEstoque.data?.users.slice(0, 10) || []);
-    setTotalPages(Math.ceil(responseEstoque.data?.users?.length ? responseEstoque.data.users.length/10 : 1 ));
+    setFilteredData(responseEstoque.data?.products.slice(0, 10) || []);
+    setTotalPages(Math.ceil(responseEstoque.data?.products?.length ? responseEstoque.data.products.length/10 : 1 ));
   }, [responseEstoque.data, responseEstoque, setData, responseAddEstoque])
   
   const handleDelete = (user: User) => {
@@ -150,7 +151,7 @@ export function CadastroProduto() {
   const handleSearch = (e: ChangeEvent<HTMLInputElement>) => setSearch(e.target.value.toLowerCase().trim());
 
   useEffect(() => {
-    const filtered = data.filter((item) => item.nome.toLowerCase().includes(search));
+    const filtered = data.filter((item) => item.descricao.toLowerCase().includes(search));
     if (filtered.length < 10) return setFilteredData(filtered);
     setTotalPages(Math.ceil(filtered.length/10));
     setPage(1);
@@ -160,7 +161,7 @@ export function CadastroProduto() {
   const handleNextPage = () => {
     if (page >= totalPages) return;
     if(search) {
-      const filtered = data.filter((item) => item.nome.toLowerCase().includes(search));
+      const filtered = data.filter((item) => item.descricao.toLowerCase().includes(search));
       const start = (page * 10);
       const end = start + 10;
       setFilteredData(filtered.slice(start, end));
@@ -177,7 +178,7 @@ export function CadastroProduto() {
   const handleBeforePage = () => {
     if (page <= 1) return;
     if (search) {
-      const filtered = data.filter((item) => item.nome.toLowerCase().includes(search));
+      const filtered = data.filter((item) => item.descricao.toLowerCase().includes(search));
       const start = (page - 2) * 10;
       const end = start + 10;
       setFilteredData(filtered.slice(start, end));
@@ -202,7 +203,7 @@ export function CadastroProduto() {
         handleEdit={handleEdit} 
         handleNextPage={handleNextPage} 
         page={page}
-        col={['Nome', 'Email', 'Cpf', 'Cargo']} 
+        col={Object.keys(data[0]) as string[] } 
         />
         <Content.Delete 
         setDeleteModalOpen={setDeleteModalOpen}

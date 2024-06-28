@@ -31,7 +31,7 @@ export const ContentTable = ({ data, filteredData, handleBeforePage, handleDelet
           {filteredData && filteredData.length > 0 ? filteredData.map((item: any, index: number) => (
             <Table.Row key={index}>
               {col.map((colItem, colIndex) => (
-                <Table.Cell key={colIndex}>{formatterData(item[colItem.toLowerCase()])}</Table.Cell>
+                <Table.Cell key={colIndex}>{formatterData(item[colItem])}</Table.Cell>
               ))}
               <Table.Cell>
                 <button onClick={() => handleEdit(item)}><FontAwesomeIcon icon={faPen} /></button>

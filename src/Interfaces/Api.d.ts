@@ -49,3 +49,26 @@ export interface EmpresaResponse {
 export interface CargoResponse {
     cargos: Cargo[];
 }
+
+export interface ProdutoResponse {
+    products: Produto[];
+}
+export interface Categoria {
+    id: number;
+    descricao: string;
+    createdAt: string;
+    updatedAt: string;
+  }
+  
+export interface Produto {
+    id: number;
+    descricao: string;
+    custo: number;
+    preco: number;
+    quantidadeMinima: number;
+    quantidadeMaxima: number;
+    validade: string;
+    createdAt: string;
+    updatedAt: string;
+    categoria: Categoria;
+  }
