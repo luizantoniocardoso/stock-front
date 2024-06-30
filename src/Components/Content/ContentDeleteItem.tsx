@@ -7,15 +7,17 @@ interface ContentDeleteItemProps {
     deleteModalOpen: boolean;
     selectedItem: any;
     onConfirmDeleteItem: () => void;
+    text?: string;
+    title: string;
 }
-export const ContentDeleteItem = ({deleteModalOpen,onConfirmDeleteItem ,selectedItem,setDeleteModalOpen}:ContentDeleteItemProps) => {
+export const ContentDeleteItem = ({deleteModalOpen,onConfirmDeleteItem,setDeleteModalOpen, text, title}:ContentDeleteItemProps) => {
 
 
     return (
         <Modal.Root setShowModal={setDeleteModalOpen} showModal={deleteModalOpen} >
-          <Modal.Header title='Deletar Usuario' setShowModal={() => setDeleteModalOpen(false)}/>
+          <Modal.Header title={title} setShowModal={() => setDeleteModalOpen(false)}/>
           <Modal.Body>
-            <p>Tem certeza que deseja deletar o usuario {selectedItem?.nome} do cpf {selectedItem?.cpf} ?</p>
+            <p>{text}</p>
           </Modal.Body>
           <Modal.Footer>
             <Modal.Button onClickFunction={() => setDeleteModalOpen(false)} type='danger'>Cancelar</Modal.Button>

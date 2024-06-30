@@ -50,6 +50,10 @@ export interface CargoResponse {
     cargos: Cargo[];
 }
 
+export interface CategoriaResponse {
+    categorias: Categoria[];
+}
+
 export interface ProdutoResponse {
     products: Produto[];
 }

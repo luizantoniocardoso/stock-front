@@ -36,7 +36,6 @@ export const ContentTable = ({ data, filteredData, handleBeforePage, handleDelet
               <Table.Cell>
                 <button onClick={() => handleEdit(item)}><FontAwesomeIcon icon={faPen} /></button>
               </Table.Cell>
-              
               <Table.Cell>
                 <button onClick={() => handleDelete(item)}><FontAwesomeIcon icon={faTrash} /></button>
               </Table.Cell>

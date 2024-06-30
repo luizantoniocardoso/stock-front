@@ -5,7 +5,7 @@ import { CargoResponse, Produto, ProdutoResponse, User, UserResponse } from '@/I
 import { ChangeEvent, useEffect, useState } from 'react';
 
 import { SelectData } from 'tw-elements-react/dist/types/forms/Select/types';
-import { adicionarUserSchema, AdicionarUserSchema } from '@/Schemas';
+import { AdicionarProdutoSchema, adicionarUserSchema, AdicionarUserSchema } from '@/Schemas';
 import { object } from 'zod';
 
 
@@ -28,20 +28,28 @@ export function CadastroProduto() {
   const [search, setSearch] = useState('');
 
   const { dataLogin } = useAuth();
-
-  const [responseEstoque, fetchDataEstoque] = useFetch<ProdutoResponse>();
-  const [responseCargos, fetchDataCargos] = useFetch<CargoResponse>();
-  const [responseAddEstoque, fetchDataAddEstoque] = useFetch<UserResponse>();
+  const alert = useAlert();
+  
+  const [responseProduto, fetchDataEstoque] = useFetch<ProdutoResponse>();
+  const [responseCategoria, fetchDataCategoria] = useFetch<CargoResponse>();
+  const [responseAddProduto, fetchDataAddProduto] = useFetch<UserResponse>();
   const [responseEditEstoque, fetchDataEditEstoque] = useFetch<UserResponse>();
   const [responseDeleteEstoque, fetchDataDeleteEstoque ] = useFetch<UserResponse>();
 
-  const [ cargos, setCargos ] = useState<SelectData[]>([{ value: 0, text: '' }]);
+  const [ categoria, setCategoria ] = useState<SelectData[]>([{ value: 0, text: '' }]);
+
   const [ selectedUser, setSelectedUser ] = useState<User | null>(null);
   const [ formData, setFormData ] = useState<EstoqueFormData>({ nome: '', email: '', cpf: '', cargo: {id:0, descricao: ''} });
 
-  const alert = useAlert();
-
-  const [adicionarUser, setAdicionarUser] = useState<AdicionarUserSchema>({ cpf: '', cargo: { value: 0, text: 'Escolha um Cargo'} });
+  const [adicionarProduto, setAdicionarProduto] = useState<AdicionarProdutoSchema>({
+    categoria : 0,
+    custo: 0,
+    descricao: '',
+    preco: 0,
+    quantidadeMaxima: 0,
+    quantidadeMinima: 0,
+    validade: ''
+  });
 
   const [error , setError] = useState({cpf: '', cargo: ''})
 
@@ -54,15 +62,19 @@ export function CadastroProduto() {
     const headers = { 'Authorization': `Bearer ${dataLogin?.token}`, 'Content-Type': 'application/json' };
     const url = `${api.url}/produto?empresa=${dataLogin.empresa}`
     fetchDataEstoque(url, { headers: headers, method: 'GET' })
-  },[responseAddEstoque, dataLogin, responseDeleteEstoque, responseEditEstoque])
+  },[responseAddProduto, dataLogin, responseDeleteEstoque, responseEditEstoque])
 
   useEffect(() => {
-    if (!responseEstoque) return;
-    setData(responseEstoque.data?.products || []);
-    console.log(responseEstoque.data, 'responseEstoque.data?.users')
-    setFilteredData(responseEstoque.data?.products.slice(0, 10) || []);
-    setTotalPages(Math.ceil(responseEstoque.data?.products?.length ? responseEstoque.data.products.length/10 : 1 ));
-  }, [responseEstoque.data, responseEstoque, setData, responseAddEstoque])
+    if (!responseProduto || !responseProduto.data?.products) return;
+    responseProduto.data?.products.map((item) => {
+        if (!item.categoria) return;
+       (item.categoria as any) = item.categoria.descricao
+    })
+    setData(responseProduto.data?.products || []);
+    console.log(responseProduto.data, 'responseEstoque.data?.users')
+    setFilteredData(responseProduto.data?.products.slice(0, 10) || []);
+    setTotalPages(Math.ceil(responseProduto.data?.products?.length ? responseProduto.data.products.length/10 : 1 ));
+  }, [responseProduto.data, responseProduto, setData, responseAddProduto])
   
   const handleDelete = (user: User) => {
     setSelectedUser(user);
@@ -73,21 +85,16 @@ export function CadastroProduto() {
     setSelectedUser(user);
     if (!dataLogin) return;
     const headers = { 'Authorization': `Bearer ${dataLogin?.token}`, 'Content-Type': 'application/json' };
-    fetchDataCargos(`${api.url}/cargo?empresa=${dataLogin?.empresa}`, { method: 'GET', headers:headers })
+    fetchDataCategoria(`${api.url}/cargo?empresa=${dataLogin?.empresa}`, { method: 'GET', headers:headers })
     setFormData({ nome: user.nome, email: user.email, cpf: user.cpf, cargo: { id: user?.cargo?.id ? user.cargo.id : 0, descricao: user?.cargo?.descricao ? user.cargo.descricao: ''}});
     setEditModalOpen(true);
   }
-
-  const handleCpfChange = (e: ChangeEvent<HTMLInputElement>) => setAdicionarUser({ ...adicionarUser, cpf: e.target.value})
-
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const handleCargoChange = (e: any) => setAdicionarUser(e ? { ...adicionarUser, cargo: e} : { ...adicionarUser, cargo: { id: 0, descricao: ''}})
 
   const handleAdd = () => {
     setAddModalOpen(true);
     if (!dataLogin) return;
     const headers = { 'Authorization': `Bearer ${dataLogin?.token}`, 'Content-Type': 'application/json' };
-    fetchDataCargos(`${api.url}/cargo?empresa=${dataLogin?.empresa}`, { method: 'GET', headers:headers })
+    fetchDataCategoria(`${api.url}/cargo?empresa=${dataLogin?.empresa}`, { method: 'GET', headers:headers })
   }
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const handleChange = (e: any) => {
@@ -101,7 +108,7 @@ export function CadastroProduto() {
   };
 
   const onConfirmAddUser = () => {
-    const adicionarUserSchemaValidator = adicionarUserSchema.safeParse(adicionarUser)
+    const adicionarUserSchemaValidator = adicionarUserSchema.safeParse(adicionarProduto)
     if(!adicionarUserSchemaValidator.success){
       setError( { 
           cargo: adicionarUserSchemaValidator.error.formErrors.fieldErrors.cargo ? adicionarUserSchemaValidator.error.formErrors.fieldErrors.cargo[0] : '',
@@ -112,9 +119,9 @@ export function CadastroProduto() {
     setError({cargo: '', cpf: ''})
     setAddModalOpen(false);
     const url = `${api.url}/usuario/adicionar?empresa=${dataLogin?.empresa}`;
-    const body = JSON.stringify({ ...adicionarUser, cargo: adicionarUser.cargo.value });
+    const body = JSON.stringify({ ...adicionarProduto, cargo: adicionarProduto.cargo.value });
     const headers = { 'Authorization': `Bearer ${dataLogin?.token}`, 'Content-Type': 'application/json' };
-    fetchDataAddEstoque(url, {body, headers, method: 'POST'});
+    fetchDataAddProduto(url, {body, headers, method: 'POST'});
     alert.openAlert({text: 'Usuario Adicionado', type: 'success', time: 3000, title: 'Sucesso', onCloseAlert: () => {}})
   }
 
@@ -142,11 +149,11 @@ export function CadastroProduto() {
   }
 
   useEffect(() => {
-    if (!responseCargos) return;
-    const data = responseCargos.data?.cargos || [];
+    if (!responseCategoria) return;
+    const data = responseCategoria.data?.cargos || [];
     const dataFormated = data.map((item) => ({ value: item.id, text: item.descricao,  }))
-    setCargos(dataFormated)
-  }, [responseCargos.data, responseCargos])
+    setCategoria(dataFormated)
+  }, [responseCategoria.data, responseCategoria])
   
   const handleSearch = (e: ChangeEvent<HTMLInputElement>) => setSearch(e.target.value.toLowerCase().trim());
 
@@ -192,36 +199,42 @@ export function CadastroProduto() {
   }
 
   return (
-      <Content.Root>
-        <Content.Header title='Cadastro de Estoque' text='mudar texto dps ' onClickToAdd={handleAdd}/>
-        <Content.Search handleSearch={handleSearch} search={search} />
-        <Content.Table 
-        data={data} 
-        filteredData={filteredData}
-        handleBeforePage={handleBeforePage} 
-        handleDelete={handleDelete} 
-        handleEdit={handleEdit} 
-        handleNextPage={handleNextPage} 
-        page={page}
-        col={Object.keys(data[0]) as string[] } 
-        />
-        <Content.Delete 
-        setDeleteModalOpen={setDeleteModalOpen}
-        deleteModalOpen={deleteModalOpen}
-        selectedItem={selectedUser}
-        onConfirmDeleteItem={onConfirmDeleteUser} 
+     
+    data?.length > 0 ? 
+    
+        <Content.Root>
+            <Content.Header title='Cadastro de Produto' text='' onClickToAdd={handleAdd}/>
+            <Content.Search handleSearch={handleSearch} search={search} />
+            <Content.Table 
+            data={data} 
+            filteredData={filteredData}
+            handleBeforePage={handleBeforePage} 
+            handleDelete={handleDelete} 
+            handleEdit={handleEdit} 
+            handleNextPage={handleNextPage} 
+            page={page}
+            col={Object.keys(data[0]) as string[] } 
+            />
+            <Content.Delete 
+            text='Deseja deletar esse produto?'
+            setDeleteModalOpen={setDeleteModalOpen}
+            deleteModalOpen={deleteModalOpen}
+            selectedItem={selectedUser}
+            onConfirmDeleteItem={onConfirmDeleteUser}
+            title='Deletar Produto' 
         />
 
         <Modal.Root setShowModal={setAddModalOpen} showModal={addModalOpen} >
-          <Modal.Header title='Adicionar Usuario' setShowModal={() => setAddModalOpen(false)}/>
+          <Modal.Header title='Adicionar Produto' setShowModal={() => setAddModalOpen(false)}/>
           <Modal.Body>
             <Forms.Root>
-              <Forms.Title text='Adicionar Usuario' aling='center'/>
-              <Forms.Input id='cpf' type='text' arialabel='Cpf' placeholder='Cpf' onChangeAction={handleCpfChange}>
-                {error.cpf && <Forms.Small id="cpf" text={error.cpf} />}
-              </Forms.Input>
-              <Forms.Select  data={cargos}  onValueChange={handleCargoChange} preventFirstSelectionprop={false}/>
-                {error.cargo && <Forms.Small id="cargo" text={error.cargo} />}
+                <Forms.Input id='descricao' type='text' arialabel='Descrição' placeholder='Descrição' onChangeAction={handleChange} value={adicionarProduto?.descricao}/>
+                <Forms.Input id='custo' type='text' arialabel='Custo' placeholder='Custo' onChangeAction={handleChange} value={adicionarProduto?.custo}/>
+                <Forms.Input id='preco' type='text' arialabel='Preço' placeholder='Preço' onChangeAction={handleChange} value={adicionarProduto?.preco}/>
+                <Forms.Input id='quantidadeMinima' type='text' arialabel='Quantidade Minima' placeholder='Quantidade Minima' onChangeAction={handleChange} value={adicionarProduto?.quantidadeMinima}/>
+                <Forms.Input id='quantidadeMaxima' type='text' arialabel='Quantidade Maxima' placeholder='Quantidade Maxima' onChangeAction={handleChange} value={adicionarProduto?.quantidadeMaxima}/>
+                <Forms.Input id='validade' type='text' arialabel='Validade' placeholder='Validade' onChangeAction={handleChange} value={adicionarProduto?.validade}/>
+                <Forms.Select data={categoria} onValueChange={handleChange} value={adicionarProduto?.categoria}/>
             </Forms.Root>
           </Modal.Body>
             <Modal.Footer >
@@ -229,29 +242,10 @@ export function CadastroProduto() {
               <Modal.Button onClickFunction={onConfirmAddUser} type='success'>Aceitar</Modal.Button>
             </Modal.Footer>
         </Modal.Root>
-        <Modal.Root setShowModal={setEditModalOpen} showModal={editModalOpen} >
-            <Modal.Header title='Editar Usuario' setShowModal={() => setEditModalOpen(false)}/>
-            <Modal.Body>
-              <Forms.Root>
-                <Forms.Title text='Editar Usuario' aling='center'/>
-                <Forms.Input id='nome'  type='text' arialabel='Nome' placeholder='Nome' onChangeAction={handleChange} value={formData?.nome}>
-                  {error.cargo && <Forms.Small id="cargo" text={error.cargo} />}
-                </Forms.Input>
-                <Forms.Input id='email' type='email' arialabel='Email' placeholder='Email' onChangeAction={handleChange} value={formData?.email}>
-                  {error.cargo && <Forms.Small id="cargo" text={error.cargo} />}
-                </Forms.Input>
-                <Forms.Input id='cpf' type='text' arialabel='Cpf' placeholder='Cpf' onChangeAction={handleChange} value={formData?.cpf}>
-                  {error.cpf && <Forms.Small id="cpf" text={error.cpf} />}
-                </Forms.Input>
-                <Forms.Select  data={cargos} onValueChange={handleChange} value={formData?.cargo?.id || 0}/>
-              </Forms.Root>
-            </Modal.Body>
-              <Modal.Footer >
-                <Modal.Button onClickFunction={() => setEditModalOpen(false)} type='danger'>Fechar</Modal.Button>
-                <Modal.Button onClickFunction={onConfirmEditUser} type='success'>Aceitar</Modal.Button>
-              </Modal.Footer>
-        </Modal.Root>
+
       </Content.Root>
+      :
+      null
     
   );
 }
