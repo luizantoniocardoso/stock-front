@@ -185,6 +185,12 @@ export function CadastroEntradaSaida() {
     setPage(page - 1);
   };
 
+  const handleEdit = (item: any) => {
+  };
+
+  const handleDelete = (item: any) => {
+  };
+
   return dataEntrada.length > 0 || dataSaida.length > 0 ? (
     <Content.Root>
       <Content.Header title='Cadastro de Entrada' text='' onClickToAdd={() => handleAdd(true)} />
@@ -195,20 +201,19 @@ export function CadastroEntradaSaida() {
         filteredData={filteredData}
         handleBeforePage={handleBeforePage}
         handleNextPage={handleNextPage}
+        handleEdit={handleEdit}
+        handleDelete={handleDelete}
         page={page}
-        col={Object.keys(dataEntrada[0]) as string[]}
-      >
-        {filteredData.map((item, index) => (
-          <Content.Table.Row key={index}>
-            <Content.Table.Cell>{item.descricao}</Content.Table.Cell>
-            <Content.Table.Cell>{item.quantidade}</Content.Table.Cell>
-            <Content.Table.Cell>{item.lote}</Content.Table.Cell>
-            <Content.Table.Cell>{item.fornecedor}</Content.Table.Cell>
-            <Content.Table.Cell>{item.produto}</Content.Table.Cell>
-            <Content.Table.Cell>{dataEntrada.includes(item) ? 'Entrada' : 'Saída'}</Content.Table.Cell>
-          </Content.Table.Row>
-        ))}
-      </Content.Table>
+        col={['descricao', 'quantidade', 'lote', 'fornecedor', 'produto', 'tipo']}
+      />
+      <Content.Delete
+        text='Deseja deletar esse registro?'
+        setDeleteModalOpen={setAddModalOpen}
+        deleteModalOpen={addModalOpen}
+        selectedItem={null}
+        onConfirmDeleteItem={() => {}}
+        title='Deletar Registro'
+      />
 
       <Modal.Root setShowModal={setAddModalOpen} showModal={addModalOpen}>
         <Modal.Header title={`Adicionar ${isEntrada ? 'Entrada' : 'Saída'}`} setShowModal={() => setAddModalOpen(false)} />
