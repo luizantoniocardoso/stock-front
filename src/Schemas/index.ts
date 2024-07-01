@@ -5,8 +5,9 @@ import { LoginSchema, loginSchema } from "./loginSchema";
 import { AdicionarProdutoSchema, adicionarProdutoSchema } from "./adicionarProdutoSchema";
 import { AdicionarCategoriaSchema, adicionarCategoriaSchema } from "./adicionarCategoriaSchema";
 import { AdicionarEstoqueSchema, adicionarEstoqueSchema } from "./adicionarEstoqueSchema";
+import { AdicionarFornecedorSchema, adicionarFornecedorSchema } from "./adicionarFornecedorSchema";
 
-export type { LoginSchema, CadastroUserSchema, ForgetPasswordSchema, AdicionarUserSchema, AdicionarProdutoSchema, AdicionarCategoriaSchema, AdicionarEstoqueSchema };
+export type { LoginSchema, CadastroUserSchema, ForgetPasswordSchema, AdicionarUserSchema, AdicionarProdutoSchema, AdicionarCategoriaSchema, AdicionarEstoqueSchema, AdicionarFornecedorSchema };
 
 export {
     loginSchema,
@@ -15,5 +16,6 @@ export {
     adicionarUserSchema, 
     adicionarProdutoSchema,
     adicionarCategoriaSchema,
-    adicionarEstoqueSchema
+    adicionarEstoqueSchema,
+    adicionarFornecedorSchema
 };
