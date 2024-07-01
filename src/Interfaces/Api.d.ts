@@ -62,6 +62,18 @@ export interface EstoqueResponse {
     estoques: Estoque[];
 }
 
+export interface EntradaSaidaResponse {
+    entries: EntradaSaida[];
+}
+
+export interface LoteResponse {
+    lots: Lote[];
+}
+
+export interface FornecedorResponse {
+    suppliers: Fornecedor[];
+}
+
 export interface Categoria {
     id: number;
     descricao: string;
@@ -88,3 +100,33 @@ export interface Estoque {
     createdAt: string;
     updatedAt: string;
 };
+
+export interface Fornecedor {
+    id: number;
+    nome: string;
+    cnpj: string;
+    telefone: string;
+    createdAt: string;
+    updatedAt: string;
+}
+
+export interface Lote {
+    id: number;
+    quantidade: number;
+    validade: string;
+    createdAt: string;
+    updatedAt: string;
+    produto: Produto;
+    fornecedor: Fornecedor;
+    estoque: Estoque;
+}
+
+export interface EntradaSaida {
+    id: number;
+    quantidade: number;
+    createdAt: string;
+    updatedAt: string;
+    lote: Lote;
+    fornecedor: Fornecedor;
+    produto: Produto;
+}

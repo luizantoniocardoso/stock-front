@@ -7,8 +7,9 @@ import { AdicionarCategoriaSchema, adicionarCategoriaSchema } from "./adicionarC
 import { AdicionarEstoqueSchema, adicionarEstoqueSchema } from "./adicionarEstoqueSchema";
 import { AdicionarFornecedorSchema, adicionarFornecedorSchema } from "./adicionarFornecedorSchema";
 import { AdicionarLoteSchema, adicionarLoteSchema } from "./adicionarLoteSchema";
+import { AdicionarEntradaSaidaSchema, adicionarEntradaSaidaSchema } from "./adicionarEntradaSaidaSchema";
 
-export type { LoginSchema, CadastroUserSchema, ForgetPasswordSchema, AdicionarUserSchema, AdicionarProdutoSchema, AdicionarCategoriaSchema, AdicionarEstoqueSchema, AdicionarFornecedorSchema, AdicionarLoteSchema };
+export type { LoginSchema, CadastroUserSchema, ForgetPasswordSchema, AdicionarUserSchema, AdicionarProdutoSchema, AdicionarCategoriaSchema, AdicionarEstoqueSchema, AdicionarFornecedorSchema, AdicionarLoteSchema, AdicionarEntradaSaidaSchema };
 
 export {
     loginSchema,
@@ -19,5 +20,6 @@ export {
     adicionarCategoriaSchema,
     adicionarEstoqueSchema,
     adicionarFornecedorSchema,
-    adicionarLoteSchema
+    adicionarLoteSchema,
+    adicionarEntradaSaidaSchema
 };

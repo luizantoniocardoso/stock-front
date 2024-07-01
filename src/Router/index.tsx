@@ -2,7 +2,7 @@
 import { createBrowserRouter } from "react-router-dom";
 import "tw-elements-react/dist/css/tw-elements-react.min.css";
 import {ProtectedRoute} from "./ProtectedRoute";
-import { Login, Home, Register, CadastroEstoque, Perfil, CadastroUsers, CadastroProduto, CadastroCategoria, CadastroFornecedor, CadastroLote } from "@/Pages";
+import { Login, Home, Register, CadastroEstoque, Perfil, CadastroUsers, CadastroProduto, CadastroCategoria, CadastroFornecedor, CadastroLote, CadastroEntradaSaida } from "@/Pages";
 import { MainLayout } from "@/Layouts/MainLayout";
 
   const router = createBrowserRouter([
@@ -18,7 +18,6 @@ import { MainLayout } from "@/Layouts/MainLayout";
       path: "/register",
       element: <Register />,
     },
-    
     { 
       path: "/home",
       element: <ProtectedRoute><MainLayout><Home/></MainLayout></ProtectedRoute>
@@ -42,6 +41,10 @@ import { MainLayout } from "@/Layouts/MainLayout";
     {
       path: "/lote",
       element: <ProtectedRoute><MainLayout><CadastroLote/></MainLayout></ProtectedRoute>
+    },
+    {
+      path: '/entrada-saida',
+      element: <ProtectedRoute><MainLayout><CadastroEntradaSaida/></MainLayout></ProtectedRoute>
     },
     {
       path: "/users",

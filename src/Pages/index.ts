@@ -8,3 +8,4 @@ export { CadastroCategoria } from "./CadastroCategoria";
 export { CadastroProduto } from "./CadastroProduto";
 export { CadastroFornecedor} from "./CadastroFornecedor";
 export { CadastroLote } from "./CadastroLote";
+export { CadastroEntradaSaida } from "./CadastroEntradaSaida";
