@@ -4,8 +4,9 @@ import { forgetPasswordSchema, ForgetPasswordSchema} from "./forgetPassword";
 import { LoginSchema, loginSchema } from "./loginSchema";
 import { AdicionarProdutoSchema, adicionarProdutoSchema } from "./adicionarProdutoSchema";
 import { AdicionarCategoriaSchema, adicionarCategoriaSchema } from "./adicionarCategoriaSchema";
+import { AdicionarEstoqueSchema, adicionarEstoqueSchema } from "./adicionarEstoqueSchema";
 
-export type { LoginSchema, CadastroUserSchema, ForgetPasswordSchema, AdicionarUserSchema, AdicionarProdutoSchema, AdicionarCategoriaSchema };
+export type { LoginSchema, CadastroUserSchema, ForgetPasswordSchema, AdicionarUserSchema, AdicionarProdutoSchema, AdicionarCategoriaSchema, AdicionarEstoqueSchema };
 
 export {
     loginSchema,
@@ -13,5 +14,6 @@ export {
     forgetPasswordSchema,
     adicionarUserSchema, 
     adicionarProdutoSchema,
-    adicionarCategoriaSchema
+    adicionarCategoriaSchema,
+    adicionarEstoqueSchema
 };

@@ -1,182 +1,157 @@
-import { Content, Forms, Modal,  } from '@/Components';
+import { Content, Forms, Modal } from '@/Components';
 import { api } from '@/Enviroments';
 import { useAlert, useAuth, useFetch } from '@/Hooks';
-import { CargoResponse, User, UserResponse } from '@/Interfaces/Api';
+import { EstoqueResponse, Estoque, UserResponse } from '@/Interfaces/Api';
 import { ChangeEvent, useEffect, useState } from 'react';
-import { SelectData } from 'tw-elements-react/dist/types/forms/Select/types';
-import { adicionarUserSchema, AdicionarUserSchema } from '@/Schemas';
 
-
-interface EstoqueFormData {
-  nome: string;
-  email: string;
-  cpf: string;
-  cargo: {
-    id: number;
-    descricao: string;
-  };
-  
-}
+import { adicionarEstoqueSchema, AdicionarEstoqueSchema } from '@/Schemas';
 
 export function CadastroEstoque() {
-  const [data, setData] = useState<User[]>([]);
-  const [filteredData, setFilteredData] = useState<User[]>([]);
+  const [data, setData] = useState<Estoque[]>([]);
+  const [filteredData, setFilteredData] = useState<Estoque[]>([]);
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [search, setSearch] = useState('');
 
   const { dataLogin } = useAuth();
-
-  const [responseEstoque, fetchDataEstoque] = useFetch<UserResponse>();
-  const [responseCargos, fetchDataCargos] = useFetch<CargoResponse>();
-  const [responseAddEstoque, fetchDataAddEstoque] = useFetch<UserResponse>();
-  const [responseEditEstoque, fetchDataEditEstoque] = useFetch<UserResponse>();
-  const [responseDeleteEstoque, fetchDataDeleteEstoque ] = useFetch<UserResponse>();
-
-  const [ cargos, setCargos ] = useState<SelectData[]>([{ value: 0, text: '' }]);
-  const [ selectedUser, setSelectedUser ] = useState<User | null>(null);
-  const [ formData, setFormData ] = useState<EstoqueFormData>({ nome: '', email: '', cpf: '', cargo: {id:0, descricao: ''} });
-
   const alert = useAlert();
 
-  const [adicionarUser, setAdicionarUser] = useState<AdicionarUserSchema>({ cpf: '', cargo: { value: 0, text: 'Escolha um Cargo'} });
+  const [responseEstoque, fetchDataEstoque] = useFetch<EstoqueResponse>();
+  const [responseAddEstoque, fetchDataAddEstoque] = useFetch<UserResponse>();
+  const [responseEditEstoque, fetchDataEditEstoque] = useFetch<UserResponse>();
+  const [responseDeleteEstoque, fetchDataDeleteEstoque] = useFetch<UserResponse>();
 
-  const [error , setError] = useState({cpf: '', cargo: ''})
+  const [selectedEstoque, setSelectedEstoque] = useState<Estoque | null>(null);
+  const [formData, setFormData] = useState<AdicionarEstoqueSchema>({
+    descricao: '',
+    empresa: dataLogin?.empresa || 0
+  });
 
-  const [ addModalOpen, setAddModalOpen ] = useState(false);
-  const [ editModalOpen, setEditModalOpen ] = useState(false);	
-  const [ deleteModalOpen, setDeleteModalOpen ] = useState(false);
-  
+  const [adicionarEstoque, setAdicionarEstoque] = useState<AdicionarEstoqueSchema>({
+    descricao: '',
+    empresa: dataLogin?.empresa || 0
+  });
+
+  const [error, setError] = useState({
+    descricao: '',
+    empresa: ''
+  });
+
+  const [addModalOpen, setAddModalOpen] = useState(false);
+  const [editModalOpen, setEditModalOpen] = useState(false);
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+
   useEffect(() => {
     if (!dataLogin) return;
-    const headers = { 'Authorization': `Bearer ${dataLogin?.token}`, 'Content-Type': 'application/json' };
-    const url = `${api.url}/usuario?estoque=${dataLogin.empresa}`
-    fetchDataEstoque(url, { headers: headers, method: 'GET' })
-  },[responseAddEstoque, dataLogin, responseDeleteEstoque, responseEditEstoque])
+    const headers = { Authorization: `Bearer ${dataLogin?.token}`, 'Content-Type': 'application/json' };
+    const url = `${api.url}/estoque?empresa=${dataLogin.empresa}`;
+    fetchDataEstoque(url, { headers: headers, method: 'GET' });
+  }, [responseAddEstoque, dataLogin, responseDeleteEstoque, responseEditEstoque]);
 
   useEffect(() => {
-    if (!responseEstoque) return;
-    setData(responseEstoque.data?.users || []);
-    console.log(responseEstoque.data, 'responseEstoque.data?.users')
-    setFilteredData(responseEstoque.data?.users.slice(0, 10) || []);
-    setTotalPages(Math.ceil(responseEstoque.data?.users?.length ? responseEstoque.data.users.length/10 : 1 ));
-  }, [responseEstoque.data, responseEstoque, setData, responseAddEstoque])
-  
-  const handleDelete = (user: User) => {
-    setSelectedUser(user);
-    setDeleteModalOpen(true);
-  }
-
-  const handleEdit = (user: User) => {
-    setSelectedUser(user);
-    if (!dataLogin) return;
-    const headers = { 'Authorization': `Bearer ${dataLogin?.token}`, 'Content-Type': 'application/json' };
-    fetchDataCargos(`${api.url}/cargo?empresa=${dataLogin?.empresa}`, { method: 'GET', headers:headers })
-    setFormData({ nome: user.nome, email: user.email, cpf: user.cpf, cargo: { id: user?.cargo?.id ? user.cargo.id : 0, descricao: user?.cargo?.descricao ? user.cargo.descricao: ''}});
-    setEditModalOpen(true);
-  }
-
-  const handleCpfChange = (e: ChangeEvent<HTMLInputElement>) => setAdicionarUser({ ...adicionarUser, cpf: e.target.value})
-
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const handleCargoChange = (e: any) => setAdicionarUser(e ? { ...adicionarUser, cargo: e} : { ...adicionarUser, cargo: { id: 0, descricao: ''}})
+    if (!responseEstoque || !responseEstoque.data?.estoques) return;
+    setData(responseEstoque.data?.estoques || []);
+    setFilteredData(responseEstoque.data?.estoques.slice(0, 10) || []);
+    setTotalPages(Math.ceil(responseEstoque.data?.estoques?.length ? responseEstoque.data.estoques.length / 10 : 1));
+  }, [responseEstoque.data, responseEstoque, setData, responseAddEstoque]);
 
   const handleAdd = () => {
+    setAdicionarEstoque({
+      descricao: '',
+      empresa: dataLogin?.empresa || 0
+    });
     setAddModalOpen(true);
-    if (!dataLogin) return;
-    const headers = { 'Authorization': `Bearer ${dataLogin?.token}`, 'Content-Type': 'application/json' };
-    fetchDataCargos(`${api.url}/cargo?empresa=${dataLogin?.empresa}`, { method: 'GET', headers:headers })
-  }
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const handleChange = (e: any) => {
-    const { id , value } = e?.target ? e.target : { id: '', value: ''};
-    if(!e?.target){
-      if(!e || !e.value || !e.text) return;
-      setFormData((prevData) => ({...prevData,cargo: e}));
-      return;
-    }
-    setFormData((prevData) => ({...prevData,[id]: value}));
   };
 
-  const onConfirmAddUser = () => {
-    const adicionarUserSchemaValidator = adicionarUserSchema.safeParse(adicionarUser)
-    if(!adicionarUserSchemaValidator.success){
-      setError( { 
-          cargo: adicionarUserSchemaValidator.error.formErrors.fieldErrors.cargo ? adicionarUserSchemaValidator.error.formErrors.fieldErrors.cargo[0] : '',
-          cpf: adicionarUserSchemaValidator.error.formErrors.fieldErrors.cpf ? adicionarUserSchemaValidator.error.formErrors.fieldErrors.cpf[0] : ''
-      }); 
-      return;
+  const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    const { id, value } = e.target;
+    setAdicionarEstoque((prevData) => ({
+      ...prevData,
+      [id]: id === 'empresa' ? Number(value) : value
+    }));
+  };
+
+  const onConfirmAddEstoque = () => {
+    const adicionarEstoqueSchemaValidator = adicionarEstoqueSchema.safeParse(adicionarEstoque);
+    if (!adicionarEstoqueSchemaValidator.success) {
+      setError({
+        descricao: adicionarEstoqueSchemaValidator.error.errors.find((error) => error.path[0] === 'descricao')?.message || '',
+        empresa: adicionarEstoqueSchemaValidator.error.errors.find((error) => error.path[0] === 'empresa')?.message || ''
+      });
+    } else {
+      setAddModalOpen(false);
+      const url = `${api.url}/estoque?empresa=${dataLogin?.empresa}`;
+      const body = JSON.stringify(adicionarEstoque);
+      const headers = { Authorization: `Bearer ${dataLogin?.token}`, 'Content-Type': 'application/json' };
+      fetchDataAddEstoque(url, { body, headers, method: 'POST' });
+      alert.openAlert({ text: 'Estoque Adicionado', type: 'success', time: 3000, title: 'Sucesso', onCloseAlert: () => {} });
     }
-    setError({cargo: '', cpf: ''})
-    setAddModalOpen(false);
-    const url = `${api.url}/usuario/adicionar?empresa=${dataLogin?.empresa}`;
-    const body = JSON.stringify({ ...adicionarUser, cargo: adicionarUser.cargo.value });
-    const headers = { 'Authorization': `Bearer ${dataLogin?.token}`, 'Content-Type': 'application/json' };
-    fetchDataAddEstoque(url, {body, headers, method: 'POST'});
-    alert.openAlert({text: 'Usuario Adicionado', type: 'success', time: 3000, title: 'Sucesso', onCloseAlert: () => {}})
-  }
+  };
 
-  const onConfirmDeleteUser =  () => {
-    setDeleteModalOpen(false);
-    if (!selectedUser) return;
-    if (!dataLogin) return;
-    const headers = { 'Authorization': `Bearer ${dataLogin?.token}`, 'Content-Type': 'application/json' };
-    const url = `${api.url}/usuario/${selectedUser.id}?empresa=${dataLogin.empresa}`
-    fetchDataDeleteEstoque(url, { headers: headers, method: 'DELETE' })
-    
-    alert.openAlert({text: 'Usuario Deletado', type: 'success', time: 3000, title: 'Sucesso', onCloseAlert: () => {}})
-  }
+  const handleDelete = (estoque: Estoque) => {
+    setSelectedEstoque(estoque);
+    setDeleteModalOpen(true);
+  };
 
-  const onConfirmEditUser = () => {
+  const handleEdit = (estoque: Estoque) => {
+    setSelectedEstoque(estoque);
+    setFormData({
+      descricao: estoque.descricao,
+      empresa: estoque.empresa
+    });
+    setEditModalOpen(true);
+  };
+
+  const onConfirmEditEstoque = () => {
     setEditModalOpen(false);
-    if (!selectedUser) return;
-    if (!dataLogin) return;
-    const headers = { 'Authorization': `Bearer ${dataLogin?.token}`, 'Content-Type': 'application/json' };
-    const url = `${api.url}/usuario/${selectedUser.id}?empresa=${dataLogin.empresa}`
-    const body = JSON.stringify({ ...formData, cargo: formData.cargo.id });
-    fetchDataEditEstoque(url, {body, headers, method: 'PUT'});
-    
-    alert.openAlert({text: 'Usuario Editado', type: 'success', time: 3000, title: 'Sucesso', onCloseAlert: () => {}})
-  }
+    if (!selectedEstoque || !dataLogin) return;
+    const headers = { Authorization: `Bearer ${dataLogin?.token}`, 'Content-Type': 'application/json' };
+    const url = `${api.url}/estoque/${selectedEstoque.id}?empresa=${dataLogin.empresa}`;
+    const body = JSON.stringify(formData);
+    fetchDataEditEstoque(url, { body, headers, method: 'PUT' });
+    alert.openAlert({ text: 'Estoque Editado', type: 'success', time: 3000, title: 'Sucesso', onCloseAlert: () => {} });
+  };
 
-  useEffect(() => {
-    if (!responseCargos) return;
-    const data = responseCargos.data?.cargos || [];
-    const dataFormated = data.map((item) => ({ value: item.id, text: item.descricao,  }))
-    setCargos(dataFormated)
-  }, [responseCargos.data, responseCargos])
-  
+  const onConfirmDeleteEstoque = () => {
+    setDeleteModalOpen(false);
+    if (!selectedEstoque || !dataLogin) return;
+    const headers = { Authorization: `Bearer ${dataLogin?.token}`, 'Content-Type': 'application/json' };
+    const url = `${api.url}/estoque/${selectedEstoque.id}?empresa=${dataLogin.empresa}`;
+    fetchDataDeleteEstoque(url, { headers: headers, method: 'DELETE' });
+    alert.openAlert({ text: 'Estoque Deletado', type: 'success', time: 3000, title: 'Sucesso', onCloseAlert: () => {} });
+  };
+
   const handleSearch = (e: ChangeEvent<HTMLInputElement>) => setSearch(e.target.value.toLowerCase().trim());
 
   useEffect(() => {
-    const filtered = data.filter((item) => item.nome.toLowerCase().includes(search));
+    const filtered = data.filter((item) => item.descricao.toLowerCase().includes(search));
     if (filtered.length < 10) return setFilteredData(filtered);
-    setTotalPages(Math.ceil(filtered.length/10));
+    setTotalPages(Math.ceil(filtered.length / 10));
     setPage(1);
-    setFilteredData(filtered ? filtered.slice(0, 10) : [] );
-  }, [search])
+    setFilteredData(filtered ? filtered.slice(0, 10) : []);
+  }, [search]);
 
   const handleNextPage = () => {
     if (page >= totalPages) return;
-    if(search) {
-      const filtered = data.filter((item) => item.nome.toLowerCase().includes(search));
-      const start = (page * 10);
+    if (search) {
+      const filtered = data.filter((item) => item.descricao.toLowerCase().includes(search));
+      const start = page * 10;
       const end = start + 10;
       setFilteredData(filtered.slice(start, end));
       setPage(page + 1);
       return;
     }
-    
+
     setPage(page + 1);
-    const start = (page * 10);
+    const start = page * 10;
     const end = start + 10;
     setFilteredData(data.slice(start, end));
-  }
+  };
 
   const handleBeforePage = () => {
     if (page <= 1) return;
     if (search) {
-      const filtered = data.filter((item) => item.nome.toLowerCase().includes(search));
+      const filtered = data.filter((item) => item.descricao.toLowerCase().includes(search));
       const start = (page - 2) * 10;
       const end = start + 10;
       setFilteredData(filtered.slice(start, end));
@@ -187,69 +162,60 @@ export function CadastroEstoque() {
     const start = (page - 2) * 10;
     const end = start + 10;
     setFilteredData(data.slice(start, end));
-  }
+  };
 
-  return (
-      <Content.Root>
-        <Content.Header title='Cadastro de Estoque' text='mudar texto dps ' onClickToAdd={handleAdd}/>
-        <Content.Search handleSearch={handleSearch} search={search} />
-        <Content.Table 
-        data={data} 
+  return data?.length > 0 ? (
+    <Content.Root>
+      <Content.Header title='Cadastro de Estoque' text='' onClickToAdd={handleAdd} />
+      <Content.Search handleSearch={handleSearch} search={search} />
+      <Content.Table
+        data={data}
         filteredData={filteredData}
-        handleBeforePage={handleBeforePage} 
-        handleDelete={handleDelete} 
-        handleEdit={handleEdit} 
-        handleNextPage={handleNextPage} 
+        handleBeforePage={handleBeforePage}
+        handleDelete={handleDelete}
+        handleEdit={handleEdit}
+        handleNextPage={handleNextPage}
         page={page}
-        col={['Nome', 'Email', 'Cpf', 'Cargo']} 
-        />
-        <Content.Delete 
+        col={Object.keys(data[0]) as string[]}
+      />
+      <Content.Delete
+        text='Deseja deletar esse estoque?'
         setDeleteModalOpen={setDeleteModalOpen}
         deleteModalOpen={deleteModalOpen}
-        selectedItem={selectedUser}
-        onConfirmDeleteItem={onConfirmDeleteUser} 
-        />
+        selectedItem={selectedEstoque}
+        onConfirmDeleteItem={onConfirmDeleteEstoque}
+        title='Deletar Estoque'
+      />
 
-        <Modal.Root setShowModal={setAddModalOpen} showModal={addModalOpen} >
-          <Modal.Header title='Adicionar Usuario' setShowModal={() => setAddModalOpen(false)}/>
-          <Modal.Body>
-            <Forms.Root>
-              <Forms.Title text='Adicionar Usuario' aling='center'/>
-              <Forms.Input id='cpf' type='text' arialabel='Cpf' placeholder='Cpf' onChangeAction={handleCpfChange}>
-                {error.cpf && <Forms.Small id="cpf" text={error.cpf} />}
-              </Forms.Input>
-              <Forms.Select  data={cargos}  onValueChange={handleCargoChange} preventFirstSelectionprop={false}/>
-                {error.cargo && <Forms.Small id="cargo" text={error.cargo} />}
-            </Forms.Root>
-          </Modal.Body>
-            <Modal.Footer >
-              <Modal.Button onClickFunction={() => setAddModalOpen(false)} type='danger'>Fechar</Modal.Button>
-              <Modal.Button onClickFunction={onConfirmAddUser} type='success'>Aceitar</Modal.Button>
-            </Modal.Footer>
-        </Modal.Root>
-        <Modal.Root setShowModal={setEditModalOpen} showModal={editModalOpen} >
-            <Modal.Header title='Editar Usuario' setShowModal={() => setEditModalOpen(false)}/>
-            <Modal.Body>
-              <Forms.Root>
-                <Forms.Title text='Editar Usuario' aling='center'/>
-                <Forms.Input id='nome'  type='text' arialabel='Nome' placeholder='Nome' onChangeAction={handleChange} value={formData?.nome}>
-                  {error.cargo && <Forms.Small id="cargo" text={error.cargo} />}
-                </Forms.Input>
-                <Forms.Input id='email' type='email' arialabel='Email' placeholder='Email' onChangeAction={handleChange} value={formData?.email}>
-                  {error.cargo && <Forms.Small id="cargo" text={error.cargo} />}
-                </Forms.Input>
-                <Forms.Input id='cpf' type='text' arialabel='Cpf' placeholder='Cpf' onChangeAction={handleChange} value={formData?.cpf}>
-                  {error.cpf && <Forms.Small id="cpf" text={error.cpf} />}
-                </Forms.Input>
-                <Forms.Select  data={cargos} onValueChange={handleChange} value={formData?.cargo?.id || 0}/>
-              </Forms.Root>
-            </Modal.Body>
-              <Modal.Footer >
-                <Modal.Button onClickFunction={() => setEditModalOpen(false)} type='danger'>Fechar</Modal.Button>
-                <Modal.Button onClickFunction={onConfirmEditUser} type='success'>Aceitar</Modal.Button>
-              </Modal.Footer>
-        </Modal.Root>
-      </Content.Root>
-    
-  );
+      <Modal.Root setShowModal={setAddModalOpen} showModal={addModalOpen}>
+        <Modal.Header title='Adicionar Estoque' setShowModal={() => setAddModalOpen(false)} />
+        <Modal.Body>
+          <Forms.Root>
+            <Forms.Input id='descricao' type='text' arialabel='Descrição' placeholder='Descrição' onChangeAction={handleChange} value={adicionarEstoque.descricao}>
+              {error.descricao && <Forms.Small id="descricao" text={error.descricao} />}
+            </Forms.Input>
+          </Forms.Root>
+        </Modal.Body>
+        <Modal.Footer>
+          <Modal.Button onClickFunction={() => setAddModalOpen(false)} type='danger'>Fechar</Modal.Button>
+          <Modal.Button onClickFunction={onConfirmAddEstoque} type='success'>Adicionar</Modal.Button>
+        </Modal.Footer>
+      </Modal.Root>
+
+      <Modal.Root setShowModal={setEditModalOpen} showModal={editModalOpen}>
+        <Modal.Header title='Editar Estoque' setShowModal={() => setEditModalOpen(false)} />
+        <Modal.Body>
+          <Forms.Root>
+            <Forms.Input id='descricao' type='text' arialabel='Descrição' placeholder='Descrição' onChangeAction={(e) => setFormData({ ...formData, descricao: e.target.value })} value={formData.descricao}>
+              {error.descricao && <Forms.Small id="descricao" text={error.descricao} />}
+            </Forms.Input>
+          </Forms.Root>
+        </Modal.Body>
+        <Modal.Footer>
+          <Modal.Button onClickFunction={() => setEditModalOpen(false)} type='danger'>Fechar</Modal.Button>
+          <Modal.Button onClickFunction={onConfirmEditEstoque} type='success'>Aceitar</Modal.Button>
+        </Modal.Footer>
+      </Modal.Root>
+    </Content.Root>
+  ) : null;
 }

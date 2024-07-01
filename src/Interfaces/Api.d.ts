@@ -30,11 +30,11 @@ interface User {
     cargo: Cargo | null;
 }
 
-  
+
 export interface Auth {
     menssage: string;
     token: string;
-    empresa: number;  
+    empresa: number;
     usuario: number;
 }
 
@@ -57,13 +57,18 @@ export interface CategoriaResponse {
 export interface ProdutoResponse {
     products: Produto[];
 }
+
+export interface EstoqueResponse {
+    estoques: Estoque[];
+}
+
 export interface Categoria {
     id: number;
     descricao: string;
     createdAt: string;
     updatedAt: string;
-  }
-  
+}
+
 export interface Produto {
     id: number;
     descricao: string;
@@ -75,4 +80,11 @@ export interface Produto {
     createdAt: string;
     updatedAt: string;
     categoria: Categoria;
-  }
+}
+
+export interface Estoque {
+    id: number;
+    descricao: string;
+    createdAt: string;
+    updatedAt: string;
+};
