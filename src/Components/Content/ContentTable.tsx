@@ -13,17 +13,24 @@ interface ContentTableProps {
   handleNextPage: () => void;
   page: number;
   col: string[];
+  title: string;
 }
 
-export const ContentTable = ({ data, filteredData, handleBeforePage, handleDelete, handleEdit, handleNextPage, page, col }: ContentTableProps) => {
+export const ContentTable = ({ data, filteredData, handleBeforePage, handleDelete, handleEdit, handleNextPage, page, col, title}: ContentTableProps) => {
   return (
     <section className='px-8'>
       <Table.Root>
         <Table.Header>
           <Table.Row>
             {col.map((item, index) => (
-              <Table.Cell key={index}>{item}</Table.Cell>
+              <Table.Cell aling="center" key={index}>{item}</Table.Cell>
             ))}
+             <Table.Cell aling="center">
+              Editar
+            </Table.Cell>
+            <Table.Cell aling="center">
+              Deletar
+            </Table.Cell>
           </Table.Row>
         </Table.Header>
 
@@ -31,16 +38,19 @@ export const ContentTable = ({ data, filteredData, handleBeforePage, handleDelet
           {filteredData && filteredData.length > 0 ? filteredData.map((item: any, index: number) => (
             <Table.Row key={index}>
               {col.map((colItem, colIndex) => (
-                <Table.Cell key={colIndex}>{formatterData(item[colItem])}</Table.Cell>
+                <Table.Cell key={colIndex} aling="center">{formatterData(item[colItem])}</Table.Cell>
               ))}
-              <Table.Cell>
+              <Table.Cell aling="center">
                 <button onClick={() => handleEdit(item)}><FontAwesomeIcon icon={faPen} /></button>
               </Table.Cell>
-              <Table.Cell>
+              <Table.Cell aling="center">
                 <button onClick={() => handleDelete(item)}><FontAwesomeIcon icon={faTrash} /></button>
               </Table.Cell>
             </Table.Row>
-          )) : (
+          ))
+           
+          
+          : (
             <Table.Row>
               <Table.Cell collSpan={col.length + 2}>
                 <p className='text-center align-middle'>Sem Dados</p>
@@ -52,10 +62,10 @@ export const ContentTable = ({ data, filteredData, handleBeforePage, handleDelet
         <Table.Footer>
           <Table.Row>
             <Table.Cell collSpan={2}>
-              <p className='text-center align-middle'>Total de Usuarios: {data.length}</p>
+              <p className='text-center align-middle'>Total de {title}: {data.length}</p>
             </Table.Cell>
             <Table.Cell collSpan={2}>
-              <p className='text-center align-middle'>Usuarios Filtrados: {filteredData.length}</p>
+              <p className='text-center align-middle'>{title} Filtrados: {filteredData.length}</p>
             </Table.Cell>
             <Table.Cell collSpan={4}>
               {/* paginação */}
