@@ -7,11 +7,11 @@ interface ContentHeaderProps {
     onClickToAdd?: () => void;
     title?: string;
     text?: string;
-
+    permission: boolean;
 }
 
 
-export const ContentHeader = ({ children, onClickToAdd, title, text }:ContentHeaderProps) => {
+export const ContentHeader = ({ children, onClickToAdd, title, text, permission }:ContentHeaderProps) => {
     return (
         <section className='flex justify-between w-full py-2 sm:px-8 lg:px-8'>
             <div>
@@ -19,7 +19,7 @@ export const ContentHeader = ({ children, onClickToAdd, title, text }:ContentHea
             <p>{text}</p>
             </div>
             <div>
-            <button onClick={ onClickToAdd } className="flex items-center gap-3 px-4 py-1 border rounded-lg border-textVar hover:bg-textVar hover:text-white hover:border-transparent">
+            <button disabled={!permission} onClick={ onClickToAdd } className="flex items-center gap-3 px-4 py-1 border rounded-lg border-textVar hover:bg-textVar hover:text-white hover:border-transparent">
                 <FontAwesomeIcon icon={faPlus} /> Adicionar
             </button>
             </div>

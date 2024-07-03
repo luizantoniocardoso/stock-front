@@ -1,7 +1,7 @@
 import { Content, Forms, Modal } from '@/Components';
 import { api } from '@/Enviroments';
 import { useAlert, useAuth, useFetch } from '@/Hooks';
-import { FornecedorResponse, Fornecedor, UserResponse } from '@/Interfaces/Api';
+import { FornecedorResponse, Fornecedor, ListUserResponse } from '@/Interfaces/Api';
 import { ChangeEvent, useEffect, useState } from 'react';
 
 import { adicionarFornecedorSchema, AdicionarFornecedorSchema } from '@/Schemas';
@@ -13,13 +13,15 @@ export function CadastroFornecedor() {
   const [totalPages, setTotalPages] = useState(1);
   const [search, setSearch] = useState('');
 
-  const { dataLogin } = useAuth();
+  const { dataLogin, user } = useAuth();
   const alert = useAlert();
 
+  const permission = user?.cargo?.nivel === 'ADMIN' ? true : false;
+
   const [responseFornecedor, fetchDataFornecedor] = useFetch<FornecedorResponse>();
-  const [responseAddFornecedor, fetchDataAddFornecedor] = useFetch<UserResponse>();
-  const [responseEditFornecedor, fetchDataEditFornecedor] = useFetch<UserResponse>();
-  const [responseDeleteFornecedor, fetchDataDeleteFornecedor] = useFetch<UserResponse>();
+  const [responseAddFornecedor, fetchDataAddFornecedor] = useFetch<ListUserResponse>();
+  const [responseEditFornecedor, fetchDataEditFornecedor] = useFetch<ListUserResponse>();
+  const [responseDeleteFornecedor, fetchDataDeleteFornecedor] = useFetch<ListUserResponse>();
 
   const [selectedFornecedor, setSelectedFornecedor] = useState<Fornecedor | null>(null);
   const [formData, setFormData] = useState<AdicionarFornecedorSchema>({
@@ -190,9 +192,10 @@ export function CadastroFornecedor() {
 
   return data?.length > 0 ? (
     <Content.Root>
-      <Content.Header title='Cadastro de Fornecedor' text='' onClickToAdd={handleAdd} />
+      <Content.Header title='Cadastro de Fornecedor' text='' onClickToAdd={handleAdd} permission={permission}/>
       <Content.Search handleSearch={handleSearch} search={search} />
       <Content.Table
+      permission={permission}
         data={data}
         filteredData={filteredData}
         handleBeforePage={handleBeforePage}
@@ -201,6 +204,7 @@ export function CadastroFornecedor() {
         handleNextPage={handleNextPage}
         page={page}
         col={Object.keys(data[0]) as string[]}
+        title='fornecedores'
       />
       <Content.Delete
         text='Deseja deletar esse fornecedor?'

@@ -1,7 +1,7 @@
 import { Content, Forms, Modal } from '@/Components';
 import { api } from '@/Enviroments';
 import { useAlert, useAuth, useFetch } from '@/Hooks';
-import { EstoqueResponse, Estoque, UserResponse } from '@/Interfaces/Api';
+import { EstoqueResponse, Estoque, ListUserResponse } from '@/Interfaces/Api';
 import { ChangeEvent, useEffect, useState } from 'react';
 
 import { adicionarEstoqueSchema, AdicionarEstoqueSchema } from '@/Schemas';
@@ -13,13 +13,13 @@ export function CadastroEstoque() {
   const [totalPages, setTotalPages] = useState(1);
   const [search, setSearch] = useState('');
 
-  const { dataLogin } = useAuth();
+  const { dataLogin, user } = useAuth();
   const alert = useAlert();
 
   const [responseEstoque, fetchDataEstoque] = useFetch<EstoqueResponse>();
-  const [responseAddEstoque, fetchDataAddEstoque] = useFetch<UserResponse>();
-  const [responseEditEstoque, fetchDataEditEstoque] = useFetch<UserResponse>();
-  const [responseDeleteEstoque, fetchDataDeleteEstoque] = useFetch<UserResponse>();
+  const [responseAddEstoque, fetchDataAddEstoque] = useFetch<ListUserResponse>();
+  const [responseEditEstoque, fetchDataEditEstoque] = useFetch<ListUserResponse>();
+  const [responseDeleteEstoque, fetchDataDeleteEstoque] = useFetch<ListUserResponse>();
 
   const [selectedEstoque, setSelectedEstoque] = useState<Estoque | null>(null);
   const [formData, setFormData] = useState<AdicionarEstoqueSchema>({
@@ -40,6 +40,9 @@ export function CadastroEstoque() {
   const [addModalOpen, setAddModalOpen] = useState(false);
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+
+  const permission = user?.cargo?.nivel === 'ADMIN' ? true : false;
+
 
   useEffect(() => {
     if (!dataLogin) return;
@@ -166,9 +169,10 @@ export function CadastroEstoque() {
 
   return data?.length > 0 ? (
     <Content.Root>
-      <Content.Header title='Cadastro de Estoque' text='' onClickToAdd={handleAdd} />
+      <Content.Header title='Cadastro de Estoque' text='' onClickToAdd={handleAdd} permission={permission} />
       <Content.Search handleSearch={handleSearch} search={search} />
       <Content.Table
+        permission={permission}
         data={data}
         filteredData={filteredData}
         handleBeforePage={handleBeforePage}
@@ -176,6 +180,7 @@ export function CadastroEstoque() {
         handleEdit={handleEdit}
         handleNextPage={handleNextPage}
         page={page}
+        title='estoques'
         col={Object.keys(data[0]) as string[]}
       />
       <Content.Delete

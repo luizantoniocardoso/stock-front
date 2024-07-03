@@ -4,6 +4,7 @@ import "tw-elements-react/dist/css/tw-elements-react.min.css";
 import {ProtectedRoute} from "./ProtectedRoute";
 import { Login, Home, Register, CadastroEstoque, Perfil, CadastroUsers, CadastroProduto, CadastroCategoria, CadastroFornecedor, CadastroLote, CadastroEntradaSaida } from "@/Pages";
 import { MainLayout } from "@/Layouts/MainLayout";
+import { PermissionRouter } from "./PermissionRouter";
 
   const router = createBrowserRouter([
     {
@@ -48,7 +49,7 @@ import { MainLayout } from "@/Layouts/MainLayout";
     },
     {
       path: "/users",
-      element: <ProtectedRoute><MainLayout><CadastroUsers/></MainLayout></ProtectedRoute>
+      element: <ProtectedRoute><PermissionRouter><MainLayout><CadastroUsers/></MainLayout></PermissionRouter></ProtectedRoute>
     },
     {
       path: "/profile",

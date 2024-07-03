@@ -1,7 +1,7 @@
 import { Content, Forms, Modal } from '@/Components';
 import { api } from '@/Enviroments';
 import { useAlert, useAuth, useFetch } from '@/Hooks';
-import { CargoResponse, Produto, ProdutoResponse, User, UserResponse } from '@/Interfaces/Api';
+import { CargoResponse, Produto, ProdutoResponse, User, ListUserResponse } from '@/Interfaces/Api';
 import { ChangeEvent, useEffect, useState } from 'react';
 
 import { SelectData } from 'tw-elements-react/dist/types/forms/Select/types';
@@ -14,17 +14,17 @@ export function CadastroProduto() {
   const [totalPages, setTotalPages] = useState(1);
   const [search, setSearch] = useState('');
 
-  const { dataLogin } = useAuth();
+  const { dataLogin, user } = useAuth();
   const alert = useAlert();
 
   const [responseProduto, fetchDataEstoque] = useFetch<ProdutoResponse>();
   const [responseCategoria, fetchDataCategoria] = useFetch<CargoResponse>();
-  const [responseAddProduto, fetchDataAddProduto] = useFetch<UserResponse>();
-  const [responseEditEstoque, fetchDataEditEstoque] = useFetch<UserResponse>();
-  const [responseDeleteEstoque, fetchDataDeleteEstoque] = useFetch<UserResponse>();
+  const [responseAddProduto, fetchDataAddProduto] = useFetch<ListUserResponse>();
+  const [responseEditEstoque, fetchDataEditEstoque] = useFetch<ListUserResponse>();
+  const [responseDeleteEstoque, fetchDataDeleteEstoque] = useFetch<ListUserResponse>();
 
   const [categoria, setCategoria] = useState<SelectData[]>([{ value: 0, text: '' }]);
-
+  
   const [selectedProduto, setSelectedProduto] = useState<Produto | null>(null);
   const [formData, setFormData] = useState<AdicionarProdutoSchema>({
     descricao: '',
@@ -59,6 +59,8 @@ export function CadastroProduto() {
   const [addModalOpen, setAddModalOpen] = useState(false);
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+
+  const permission = user?.cargo?.nivel === 'ADMIN' ? true : false;
 
   useEffect(() => {
     if (!dataLogin) return;
@@ -221,9 +223,10 @@ export function CadastroProduto() {
 
   return data?.length > 0 ? (
     <Content.Root>
-      <Content.Header title='Cadastro de Produto' text='' onClickToAdd={handleAdd} />
+      <Content.Header title='Cadastro de Produto' text='' onClickToAdd={handleAdd} permission={permission}/>
       <Content.Search handleSearch={handleSearch} search={search} />
       <Content.Table
+        permission={permission}
         data={data}
         filteredData={filteredData}
         handleBeforePage={handleBeforePage}
@@ -232,6 +235,7 @@ export function CadastroProduto() {
         handleNextPage={handleNextPage}
         page={page}
         col={Object.keys(data[0]) as string[]}
+        title='produtos'
       />
       <Content.Delete
         text='Deseja deletar esse produto?'

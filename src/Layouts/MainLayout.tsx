@@ -6,8 +6,10 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHome, faUser, faCog, faBriefcase, faUsers, faPencil, faStar, faTruck, faBoxesStacked, faArrowRightArrowLeft } from '@fortawesome/free-solid-svg-icons';
 
 export const MainLayout = ({ children }: { children: React.ReactNode }) => {
-    const auth = useAuth();
-    const { empresa, user } = auth;
+    const { user, empresa } = useAuth();
+
+    const permissionAuth = user?.cargo?.nivel; 
+
     const [data, setData] = useState<{ nome: string; cargo: string; descricao: string }>({nome: '', cargo: '', descricao: ''});
 
     useEffect(() => {
@@ -39,7 +41,11 @@ export const MainLayout = ({ children }: { children: React.ReactNode }) => {
                         <Sidebar.Item to="/fornecedor" description="Cadastro de Fornecedor"><FontAwesomeIcon icon={faTruck}/></Sidebar.Item>
                         <Sidebar.Item to="/lote" description="Cadastro de Lote"><FontAwesomeIcon icon={faBoxesStacked}/></Sidebar.Item>
                         <Sidebar.Item to="/entrada-saida" description="Cadastro de Entrada/Saida"><FontAwesomeIcon icon={faArrowRightArrowLeft}/></Sidebar.Item>
-                        <Sidebar.Item to="/users" description="Cadastro de Usuarios"><FontAwesomeIcon icon={faUsers} /> </Sidebar.Item>
+                        {
+                            permissionAuth ? 
+                            <Sidebar.Item to="/users" description="Cadastro de Usuarios"><FontAwesomeIcon icon={faUsers} /> </Sidebar.Item>
+                            : null
+                        }
                         <Sidebar.Item to="/profile" description="Perfil"><FontAwesomeIcon icon={faUser} /> </Sidebar.Item>
                     </div>
                     <div className="mt-auto">

@@ -1,7 +1,7 @@
 import { Content, Forms, Modal } from '@/Components';
 import { api } from '@/Enviroments';
 import { useAlert, useAuth, useFetch } from '@/Hooks';
-import { CategoriaResponse, Categoria, UserResponse } from '@/Interfaces/Api';
+import { CategoriaResponse, Categoria, ListUserResponse } from '@/Interfaces/Api';
 import { ChangeEvent, useEffect, useState } from 'react';
 
 import { adicionarCategoriaSchema, AdicionarCategoriaSchema } from '@/Schemas';
@@ -13,13 +13,13 @@ export function CadastroCategoria() {
   const [totalPages, setTotalPages] = useState(1);
   const [search, setSearch] = useState('');
 
-  const { dataLogin } = useAuth();
+  const { dataLogin, user } = useAuth();
   const alert = useAlert();
 
   const [responseCategoria, fetchDataCategoria] = useFetch<CategoriaResponse>();
-  const [responseAddCategoria, fetchDataAddCategoria] = useFetch<UserResponse>();
-  const [responseEditCategoria, fetchDataEditCategoria] = useFetch<UserResponse>();
-  const [responseDeleteCategoria, fetchDataDeleteCategoria] = useFetch<UserResponse>();
+  const [responseAddCategoria, fetchDataAddCategoria] = useFetch<ListUserResponse>();
+  const [responseEditCategoria, fetchDataEditCategoria] = useFetch<ListUserResponse>();
+  const [responseDeleteCategoria, fetchDataDeleteCategoria] = useFetch<ListUserResponse>();
 
   const [selectedCategoria, setSelectedCategoria] = useState<Categoria | null>(null);
   const [formData, setFormData] = useState<AdicionarCategoriaSchema>({
@@ -37,6 +37,9 @@ export function CadastroCategoria() {
   const [addModalOpen, setAddModalOpen] = useState(false);
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+
+  const permission = user?.cargo?.nivel === 'ADMIN' ? true : false;
+
 
   useEffect(() => {
     if (!dataLogin) return;
@@ -160,9 +163,10 @@ export function CadastroCategoria() {
 
   return data?.length > 0 ? (
     <Content.Root>
-      <Content.Header title='Cadastro de Categoria' text='' onClickToAdd={handleAdd} />
+      <Content.Header title='Cadastro de Categoria' text='' onClickToAdd={handleAdd} permission={permission}/>
       <Content.Search handleSearch={handleSearch} search={search} />
       <Content.Table
+        permission={permission}
         data={data}
         filteredData={filteredData}
         handleBeforePage={handleBeforePage}
@@ -171,6 +175,7 @@ export function CadastroCategoria() {
         handleNextPage={handleNextPage}
         page={page}
         col={Object.keys(data[0]) as string[]}
+        title='categorias'
       />
       <Content.Delete
         text='Deseja deletar essa categoria?'

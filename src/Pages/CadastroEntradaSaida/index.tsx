@@ -15,7 +15,7 @@ export function CadastroEntradaSaida() {
   const [totalPages, setTotalPages] = useState(1);
   const [search, setSearch] = useState('');
 
-  const { dataLogin } = useAuth();
+  const { dataLogin, user } = useAuth();
   const alert = useAlert();
 
   const [responseEntrada, fetchDataEntrada] = useFetch<EntradaSaidaResponse>();
@@ -35,6 +35,9 @@ export function CadastroEntradaSaida() {
     fornecedor: 0,
     produto: 0
   });
+
+  const permission = user?.cargo?.nivel === 'ADMIN' ? true : false;
+
 
   const [error, setError] = useState({
     quantidade: '',
@@ -191,7 +194,7 @@ export function CadastroEntradaSaida() {
   const handleDelete = (item: any) => {
   };
 
-  return dataEntrada.length > 0 || dataSaida.length > 0 ? (
+  return  (
     <Content.Root>
       <Content.Header title='Cadastro de Entrada' text='' onClickToAdd={() => handleAdd(true)} />
       <Content.Header title='Cadastro de Saída' text='' onClickToAdd={() => handleAdd(false)} />
@@ -236,5 +239,5 @@ export function CadastroEntradaSaida() {
         </Modal.Footer>
       </Modal.Root>
     </Content.Root>
-  ) : null;
+  ) 
 }

@@ -1,7 +1,7 @@
 import { Forms, Modal, Table } from '@/Components';
 import { api } from '@/Enviroments';
 import { useAlert, useAuth, useFetch } from '@/Hooks';
-import { CargoResponse, User, UserResponse } from '@/Interfaces/Api';
+import { CargoResponse, User, ListUserResponse } from '@/Interfaces/Api';
 import { ChangeEvent, useEffect, useState } from 'react';
 import { formatterData } from '@/Utils';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -30,11 +30,11 @@ export function CadastroUsers() {
 
   const { dataLogin } = useAuth();
 
-  const [responseUsers, fetchDataUsers] = useFetch<UserResponse>();
+  const [responseUsers, fetchDataUsers] = useFetch<ListUserResponse>();
   const [responseCargos, fetchDataCargos] = useFetch<CargoResponse>();
-  const [responseAddUser, fetchDataAddUser] = useFetch<UserResponse>();
-  const [responseEditUser, fetchDataEditUser] = useFetch<UserResponse>();
-  const [responseDeleteUser, fetchDataDeleteUser] = useFetch<UserResponse>();
+  const [responseAddUser, fetchDataAddUser] = useFetch<ListUserResponse>();
+  const [responseEditUser, fetchDataEditUser] = useFetch<ListUserResponse>();
+  const [responseDeleteUser, fetchDataDeleteUser] = useFetch<ListUserResponse>();
 
   const [ cargos, setCargos ] = useState<SelectData[]>([{ value: 0, text: '' }]);
   const [ selectedUser, setSelectedUser ] = useState<User | null>(null);

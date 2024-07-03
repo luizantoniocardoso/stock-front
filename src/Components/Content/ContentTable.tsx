@@ -14,9 +14,10 @@ interface ContentTableProps {
   page: number;
   col: string[];
   title: string;
+  permission: boolean;
 }
 
-export const ContentTable = ({ data, filteredData, handleBeforePage, handleDelete, handleEdit, handleNextPage, page, col, title}: ContentTableProps) => {
+export const ContentTable = ({ data, filteredData, handleBeforePage, handleDelete, handleEdit, handleNextPage, page, col, title, permission}: ContentTableProps) => {
   return (
     <section className='px-8'>
       <Table.Root>
@@ -41,10 +42,10 @@ export const ContentTable = ({ data, filteredData, handleBeforePage, handleDelet
                 <Table.Cell key={colIndex} aling="center">{formatterData(item[colItem])}</Table.Cell>
               ))}
               <Table.Cell aling="center">
-                <button onClick={() => handleEdit(item)}><FontAwesomeIcon icon={faPen} /></button>
+                <button onClick={() => handleEdit(item)} disabled={!permission}><FontAwesomeIcon icon={faPen} /></button>
               </Table.Cell>
               <Table.Cell aling="center">
-                <button onClick={() => handleDelete(item)}><FontAwesomeIcon icon={faTrash} /></button>
+                <button onClick={() => handleDelete(item)} disabled={!permission}><FontAwesomeIcon icon={faTrash} /></button>
               </Table.Cell>
             </Table.Row>
           ))

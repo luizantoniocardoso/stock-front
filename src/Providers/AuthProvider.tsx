@@ -72,7 +72,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
     const getUserData = async () => {
         if (dataLogin) {
-            const url = `${api.url}/usuario?empresa=${dataLogin.empresa}`; 
+            const url = `${api.url}/usuario/${dataLogin.usuario}?empresa=${dataLogin.empresa}`; 
             const headers = {
                 'Authorization': `Bearer ${dataLogin.token}`, 
                 'Content-Type': 'application/json'
@@ -80,7 +80,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
             const method = 'GET';
             await fetchDataUser(url, { headers, method });
             if (responseUser.data && dataLogin.usuario) {
-                setUser(responseUser.data.users.find(user => user.id === dataLogin.usuario) || null);
+                setUser(responseUser.data.user);
             }
         }
     };

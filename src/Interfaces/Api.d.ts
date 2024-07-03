@@ -39,8 +39,11 @@ export interface Auth {
 }
 
 
-export interface UserResponse {
+export interface ListUserResponse {
     users: User[];
+}
+export interface UserResponse {
+    user: User
 }
 export interface EmpresaResponse {
     companies: Empresa[];

@@ -1,7 +1,7 @@
 import { Content, Forms, Modal } from '@/Components';
 import { api } from '@/Enviroments';
 import { useAlert, useAuth, useFetch } from '@/Hooks';
-import { LoteResponse, Lote, ProdutoResponse, UserResponse } from '@/Interfaces/Api';
+import { LoteResponse, Lote, ProdutoResponse, ListUserResponse } from '@/Interfaces/Api';
 import { ChangeEvent, useEffect, useState } from 'react';
 
 import { SelectData } from 'tw-elements-react/dist/types/forms/Select/types';
@@ -14,14 +14,14 @@ export function CadastroLote() {
   const [totalPages, setTotalPages] = useState(1);
   const [search, setSearch] = useState('');
 
-  const { dataLogin } = useAuth();
+  const { dataLogin, user } = useAuth();
   const alert = useAlert();
 
   const [responseLote, fetchDataLote] = useFetch<LoteResponse>();
   const [responseProduto, fetchDataProduto] = useFetch<ProdutoResponse>();
-  const [responseAddLote, fetchDataAddLote] = useFetch<UserResponse>();
-  const [responseEditLote, fetchDataEditLote] = useFetch<UserResponse>();
-  const [responseDeleteLote, fetchDataDeleteLote] = useFetch<UserResponse>();
+  const [responseAddLote, fetchDataAddLote] = useFetch<ListUserResponse>();
+  const [responseEditLote, fetchDataEditLote] = useFetch<ListUserResponse>();
+  const [responseDeleteLote, fetchDataDeleteLote] = useFetch<ListUserResponse>();
 
   const [produtos, setProdutos] = useState<SelectData[]>([{ value: 0, text: '' }]);
 
@@ -56,6 +56,9 @@ export function CadastroLote() {
   const [addModalOpen, setAddModalOpen] = useState(false);
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+
+  const permission = user?.cargo?.nivel === 'ADMIN' ? true : false;
+
 
   useEffect(() => {
     if (!dataLogin) return;
@@ -211,9 +214,10 @@ export function CadastroLote() {
 
   return data?.length > 0 ? (
     <Content.Root>
-      <Content.Header title='Cadastro de Lote' text='' onClickToAdd={handleAdd} />
+      <Content.Header title='Cadastro de Lote' text='' onClickToAdd={handleAdd} permission={permission} />
       <Content.Search handleSearch={handleSearch} search={search} />
       <Content.Table
+        permission={permission}
         data={data}
         filteredData={filteredData}
         handleBeforePage={handleBeforePage}
@@ -222,6 +226,7 @@ export function CadastroLote() {
         handleNextPage={handleNextPage}
         page={page}
         col={Object.keys(data[0]) as string[]}
+        title='lotes'
       />
       <Content.Delete
         text='Deseja deletar esse lote?'
