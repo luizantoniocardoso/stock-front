@@ -6,7 +6,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHome, faUser, faCog, faBriefcase, faUsers, faPencil, faStar, faTruck, faBoxesStacked, faArrowRightArrowLeft } from '@fortawesome/free-solid-svg-icons';
 
 export const MainLayout = ({ children }: { children: React.ReactNode }) => {
-    const { user, empresa } = useAuth();
+    const { user, empresa, logout } = useAuth();
 
     const permissionAuth = user?.cargo?.nivel; 
 
@@ -25,10 +25,10 @@ export const MainLayout = ({ children }: { children: React.ReactNode }) => {
                 <Topbar.Nav>
                     <p>{data?.descricao}</p>
                 </Topbar.Nav>
-                <Topbar.User.Root user="https://i.pravatar.cc/300" empresa={data?.cargo} name={data.nome}>
+                <Topbar.User.Root user="img/user.png" empresa={data?.cargo} name={data.nome}>
                     <Topbar.User.Item onClick={() => console.log("Perfil")}>Perfil</Topbar.User.Item>
                     <Topbar.User.Divider />
-                    <Topbar.User.Item onClick={() => auth.logout()}>Sair</Topbar.User.Item>
+                    <Topbar.User.Item onClick={() => logout()}>Sair</Topbar.User.Item>
                 </Topbar.User.Root>
             </Topbar.Root>
             <div className="flex flex-1 overflow-hidden">

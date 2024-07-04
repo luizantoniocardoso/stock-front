@@ -1,29 +1,41 @@
 import { Content, Forms, Modal } from '@/Components';
 import { api } from '@/Enviroments';
 import { useAlert, useAuth, useFetch } from '@/Hooks';
-import { LoteResponse, FornecedorResponse, ProdutoResponse, EntradaSaidaResponse } from '@/Interfaces/Api';
+import { LoteResponse, FornecedorResponse, ProdutoResponse, EntradaResponse, SaidaResponse, Saida, Entrada } from '@/Interfaces/Api';
 import { ChangeEvent, useEffect, useState } from 'react';
 
 import { SelectData } from 'tw-elements-react/dist/types/forms/Select/types';
 import { adicionarEntradaSaidaSchema, AdicionarEntradaSaidaSchema } from '@/Schemas';
 
 export function CadastroEntradaSaida() {
-  const [dataEntrada, setDataEntrada] = useState<EntradaSaidaResponse[]>([]);
-  const [dataSaida, setDataSaida] = useState<EntradaSaidaResponse[]>([]);
-  const [filteredData, setFilteredData] = useState<EntradaSaidaResponse[]>([]);
+  const [dataEntrada, setDataEntrada] = useState<Entrada[]>([]);
+  const [dataSaida, setDataSaida] = useState<Saida[]>([]);
+
+  const [filteredData, setFilteredData] = useState<Entrada[] | Saida[]>([]);
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [search, setSearch] = useState('');
 
+  const [tab, setTab] = useState(0);
+
   const { dataLogin, user } = useAuth();
   const alert = useAlert();
 
-  const [responseEntrada, fetchDataEntrada] = useFetch<EntradaSaidaResponse>();
-  const [responseSaida, fetchDataSaida] = useFetch<EntradaSaidaResponse>();
+  const [responseEntrada, fetchDataEntrada] = useFetch<EntradaResponse>();
+  const [responseSaida, fetchDataSaida] = useFetch<SaidaResponse>();
+  
   const [responseLote, fetchDataLote] = useFetch<LoteResponse>();
   const [responseFornecedor, fetchDataFornecedor] = useFetch<FornecedorResponse>();
   const [responseProduto, fetchDataProduto] = useFetch<ProdutoResponse>();
-  const [responseAddEntradaSaida, fetchDataAddEntradaSaida] = useFetch<EntradaSaidaResponse>();
+
+  const [responseAddEntrada, fetchDataAddEntrada] = useFetch<Entrada>();
+  const [responseAddSaida, fetchDataAddSaida] = useFetch<Saida>();
+
+  const [editEntrada, fetchDataEditEntrada] = useFetch<Entrada>();
+  const [editSaida, fetchDataEditSaida] = useFetch<Saida>();
+
+  const [deleteEntrada, fetchDataDeleteEntrada] = useFetch<Entrada>();
+  const [deleteSaida, fetchDataDeleteSaida] = useFetch<Saida>();
 
   const [lotes, setLotes] = useState<SelectData[]>([{ value: 0, text: '' }]);
   const [fornecedores, setFornecedores] = useState<SelectData[]>([{ value: 0, text: '' }]);
@@ -36,15 +48,16 @@ export function CadastroEntradaSaida() {
     produto: 0
   });
 
-  const permission = user?.cargo?.nivel === 'ADMIN' ? true : false;
-
-
   const [error, setError] = useState({
     quantidade: '',
     lote: '',
     fornecedor: '',
     produto: ''
   });
+
+  const permission = user?.cargo?.nivel === 'ADMIN' ? true : false
+
+
 
   const [addModalOpen, setAddModalOpen] = useState(false);
   const [isEntrada, setIsEntrada] = useState(true);
@@ -55,16 +68,16 @@ export function CadastroEntradaSaida() {
 
     const urlEntrada = `${api.url}/entrada?empresa=${dataLogin.empresa}`;
     fetchDataEntrada(urlEntrada, { headers: headers, method: 'GET' });
-
     const urlSaida = `${api.url}/saida?empresa=${dataLogin.empresa}`;
     fetchDataSaida(urlSaida, { headers: headers, method: 'GET' });
-  }, [responseAddEntradaSaida, dataLogin]);
+  }, [responseAddEntrada, dataLogin] );
+
+
 
   useEffect(() => {
-    if (Array.isArray(responseEntrada.data)) {
-      setDataEntrada(responseEntrada.data);
-    }
-  }, [responseEntrada.data]);
+    if (!responseEntrada.data)return  
+      return setDataEntrada(responseEntrada.data.entradas);
+  }, [responseEntrada.data])
 
   useEffect(() => {
     if (Array.isArray(responseSaida.data)) {
@@ -78,20 +91,8 @@ export function CadastroEntradaSaida() {
     setTotalPages(Math.ceil(allData.length / 10));
   }, [dataEntrada, dataSaida]);
 
-  const handleAdd = (entrada: boolean) => {
-    setAdicionarEntradaSaida({
-      quantidade: 0,
-      lote: 0,
-      fornecedor: 0,
-      produto: 0
-    });
-    setAddModalOpen(true);
-    setIsEntrada(entrada);
-    if (!dataLogin) return;
-    const headers = { Authorization: `Bearer ${dataLogin?.token}`, 'Content-Type': 'application/json' };
-    fetchDataLote(`${api.url}/lote?empresa=${dataLogin?.empresa}`, { method: 'GET', headers: headers });
-    fetchDataFornecedor(`${api.url}/fornecedor?empresa=${dataLogin?.empresa}`, { method: 'GET', headers: headers });
-    fetchDataProduto(`${api.url}/produto?empresa=${dataLogin?.empresa}`, { method: 'GET', headers: headers });
+  const handleAdd = () => {
+  
   };
 
   const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
@@ -120,7 +121,7 @@ export function CadastroEntradaSaida() {
       const url = `${api.url}/${isEntrada ? 'entrada' : 'saida'}?empresa=${dataLogin?.empresa}`;
       const body = JSON.stringify(adicionarEntradaSaida);
       const headers = { Authorization: `Bearer ${dataLogin?.token}`, 'Content-Type': 'application/json' };
-      fetchDataAddEntradaSaida(url, { body, headers, method: 'POST' });
+      fetchDataAddEntrada(url, { body, headers, method: 'POST' });
       alert.openAlert({ text: `Registro de ${isEntrada ? 'Entrada' : 'Saída'} Adicionado`, type: 'success', time: 3000, title: 'Sucesso', onCloseAlert: () => {} });
     }
   };
@@ -148,96 +149,47 @@ export function CadastroEntradaSaida() {
 
   const handleSearch = (e: ChangeEvent<HTMLInputElement>) => setSearch(e.target.value.toLowerCase().trim());
 
-  useEffect(() => {
-    const allData = [...dataEntrada, ...dataSaida];
-    const filtered = allData.filter((item) => item.descricao.toLowerCase().includes(search));
-    if (filtered.length < 10) {
-      setFilteredData(filtered);
-      return;
-    }
-    setTotalPages(Math.ceil(filtered.length / 10));
-    setPage(1);
-    setFilteredData(filtered.slice(0, 10));
-  }, [search, dataEntrada, dataSaida]);
-
-  const handleNextPage = () => {
-    if (page >= totalPages) return;
-    const allData = [...dataEntrada, ...dataSaida];
-    const start = page * 10;
-    const end = start + 10;
-    if (search) {
-      const filtered = allData.filter((item) => item.descricao.toLowerCase().includes(search));
-      setFilteredData(filtered.slice(start, end));
-    } else {
-      setFilteredData(allData.slice(start, end));
-    }
-    setPage(page + 1);
-  };
-
-  const handleBeforePage = () => {
-    if (page <= 1) return;
-    const allData = [...dataEntrada, ...dataSaida];
-    const start = (page - 2) * 10;
-    const end = start + 10;
-    if (search) {
-      const filtered = allData.filter((item) => item.descricao.toLowerCase().includes(search));
-      setFilteredData(filtered.slice(start, end));
-    } else {
-      setFilteredData(allData.slice(start, end));
-    }
-    setPage(page - 1);
-  };
-
   const handleEdit = (item: any) => {
   };
 
   const handleDelete = (item: any) => {
+
+
+
+    return setAddModalOpen(true);
   };
 
   return  (
     <Content.Root>
-      <Content.Header title='Cadastro de Entrada' text='' onClickToAdd={() => handleAdd(true)} />
-      <Content.Header title='Cadastro de Saída' text='' onClickToAdd={() => handleAdd(false)} />
+      <Content.Header title='Cadastro de Entrada' text='' onClickToAdd={() => handleAdd()} permission={permission}/>
+
+     <div className='flex justify-between w-full px-8'>
+      <Content.Tabs activeTab={tab} setActiveTab={setTab} tabs={[{label: 'Entradas'}, {label: 'Saidas'}]} ></Content.Tabs>
       <Content.Search handleSearch={handleSearch} search={search} />
+     </div>
+      
       <Content.Table
+        permission={permission}
         data={[...dataEntrada, ...dataSaida]}
         filteredData={filteredData}
-        handleBeforePage={handleBeforePage}
-        handleNextPage={handleNextPage}
+        handleBeforePage={() => console.log('before')}
+        handleNextPage={() => console.log('next')}
         handleEdit={handleEdit}
         handleDelete={handleDelete}
         page={page}
         col={['descricao', 'quantidade', 'lote', 'fornecedor', 'produto', 'tipo']}
+        title='Entradas e Saídas'
       />
       <Content.Delete
         text='Deseja deletar esse registro?'
         setDeleteModalOpen={setAddModalOpen}
         deleteModalOpen={addModalOpen}
         selectedItem={null}
-        onConfirmDeleteItem={() => {}}
+        onConfirmDeleteItem={handleDelete}
         title='Deletar Registro'
       />
 
-      <Modal.Root setShowModal={setAddModalOpen} showModal={addModalOpen}>
-        <Modal.Header title={`Adicionar ${isEntrada ? 'Entrada' : 'Saída'}`} setShowModal={() => setAddModalOpen(false)} />
-        <Modal.Body>
-          <Forms.Root>
-            <Forms.Input id='quantidade' type='number' arialabel='Quantidade' placeholder='Quantidade' onChangeAction={handleChange} value={adicionarEntradaSaida.quantidade.toString()}>
-              {error.quantidade && <Forms.Small id="quantidade" text={error.quantidade} />}
-            </Forms.Input>
-            <Forms.Select id='lote' data={lotes} onValueChange={(e) => handleSelectChange(e, 'lote')} value={adicionarEntradaSaida.lote} />
-            {error.lote && <Forms.Small id="lote" text={error.lote} />}
-            <Forms.Select id='fornecedor' data={fornecedores} onValueChange={(e) => handleSelectChange(e, 'fornecedor')} value={adicionarEntradaSaida.fornecedor} />
-            {error.fornecedor && <Forms.Small id="fornecedor" text={error.fornecedor} />}
-            <Forms.Select id='produto' data={produtos} onValueChange={(e) => handleSelectChange(e, 'produto')} value={adicionarEntradaSaida.produto} />
-            {error.produto && <Forms.Small id="produto" text={error.produto} />}
-          </Forms.Root>
-        </Modal.Body>
-        <Modal.Footer>
-          <Modal.Button onClickFunction={() => setAddModalOpen(false)} type='danger'>Fechar</Modal.Button>
-          <Modal.Button onClickFunction={onConfirmAddEntradaSaida} type='success'>Adicionar</Modal.Button>
-        </Modal.Footer>
-      </Modal.Root>
+    
     </Content.Root>
   ) 
 }

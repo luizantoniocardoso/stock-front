@@ -22,7 +22,7 @@ export const Perfil = () => {
     return (
         <PerfilComponents.Root>
             <PerfilComponents.Avatar
-                src="https://i.pravatar.cc/300"
+                src="img/user.png"
                 alt="User avatar"
                 onResetPassword={handleResetPassword}
                 nome={user?.nome}

@@ -9,10 +9,11 @@ interface FormsSelectProps<T extends SelectData[]> {
     onValueChange: (e:any) => void;
     placeholder?: string;
     preventFirstSelectionprop ?: boolean;
+    id?: string;
 }
 
-export const FormsSelect = <T extends SelectData[]>({ data, value, onValueChange, placeholder,preventFirstSelectionprop}: FormsSelectProps<T>) => {
+export const FormsSelect = <T extends SelectData[]>({ id ,data, value, onValueChange, placeholder,preventFirstSelectionprop}: FormsSelectProps<T>) => {
     return (
-        <TESelect data={data} value={value} onValueChange={onValueChange} placeholder={placeholder} preventFirstSelectionprop={preventFirstSelectionprop}/>
+        <TESelect id={id} data={data} value={value} onValueChange={onValueChange} placeholder={placeholder} preventFirstSelectionprop={preventFirstSelectionprop}/>
     );
 };

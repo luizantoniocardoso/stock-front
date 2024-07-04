@@ -37,6 +37,23 @@ export interface Auth {
     empresa: number;
     usuario: number;
 }
+export interface Entrada {
+    id: number;
+    quantidade: number;
+    createdAt: string;
+    updatedAt: string;
+    lote: Lote;
+    produto: Produto;
+    fornecedor: Fornecedor;
+}
+
+export interface Saida {
+    id: number;
+    quantidade: number;
+    createdAt: string;
+    updatedAt: string;
+}
+
 
 
 export interface ListUserResponse {
@@ -65,8 +82,12 @@ export interface EstoqueResponse {
     estoques: Estoque[];
 }
 
-export interface EntradaSaidaResponse {
-    entries: EntradaSaida[];
+export interface EntradaResponse {
+    entradas: Entrada[];
+}
+
+export interface SaidaResponse {
+    saidas: Saida[];
 }
 
 export interface LoteResponse {
@@ -102,7 +123,7 @@ export interface Estoque {
     descricao: string;
     createdAt: string;
     updatedAt: string;
-};
+}
 
 export interface Fornecedor {
     id: number;

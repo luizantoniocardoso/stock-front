@@ -34,6 +34,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
     useEffect(() => {
         const storedData = getLoginByLocalStorage();
+        
         if (storedData) {
             setDataLogin(storedData);
         }
@@ -86,6 +87,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     };
 
     useEffect(() => {
+        if(responseEmpresa.error || responseUser.error) logout();
         if (dataLogin && isAuthenticated) {
             getEmpresaData();
             getUserData();
