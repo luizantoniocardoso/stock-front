@@ -22,6 +22,7 @@ export function CadastroEstoque() {
   const [responseDeleteEstoque, fetchDataDeleteEstoque] = useFetch<ListUserResponse>();
 
   const [selectedEstoque, setSelectedEstoque] = useState<Estoque | null>(null);
+
   const [formData, setFormData] = useState<AdicionarEstoqueSchema>({
     descricao: '',
     empresa: dataLogin?.empresa || 0
@@ -210,7 +211,7 @@ export function CadastroEstoque() {
       <Modal.Root setShowModal={setEditModalOpen} showModal={editModalOpen}>
         <Modal.Header title='Editar Estoque' setShowModal={() => setEditModalOpen(false)} />
         <Modal.Body>
-          <Forms.Root>
+          <Forms.Root>git
             <Forms.Input id='descricao' type='text' arialabel='Descrição' placeholder='Descrição' onChangeAction={(e) => setFormData({ ...formData, descricao: e.target.value })} value={formData.descricao}>
               {error.descricao && <Forms.Small id="descricao" text={error.descricao} />}
             </Forms.Input>
