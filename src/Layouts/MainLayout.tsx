@@ -43,7 +43,7 @@ export const MainLayout = ({ children }: { children: React.ReactNode }) => {
                         <Sidebar.Item to="/entrada-saida" description="Cadastro de Entrada/Saida"><FontAwesomeIcon icon={faArrowRightArrowLeft}/></Sidebar.Item>
                         {
                             permissionAuth ? 
-                            <Sidebar.Item to="/users" description="Cadastro de Usuarios"><FontAwesomeIcon icon={faUsers} /> </Sidebar.Item>
+                            <><Sidebar.Item to="/users" description="Cadastro de Usuarios"><FontAwesomeIcon icon={faUsers} /> </Sidebar.Item><Sidebar.Item to="/cargo" description="Cadastro de Cargos"><FontAwesomeIcon icon={faUsers} /> </Sidebar.Item></>
                             : null
                         }
                         <Sidebar.Item to="/profile" description="Perfil"><FontAwesomeIcon icon={faUser} /> </Sidebar.Item>

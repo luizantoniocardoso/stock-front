@@ -2,7 +2,7 @@
 import { createBrowserRouter } from "react-router-dom";
 import "tw-elements-react/dist/css/tw-elements-react.min.css";
 import {ProtectedRoute} from "./ProtectedRoute";
-import { Login, Home, Register, CadastroEstoque, Perfil, CadastroUsers, CadastroProduto, CadastroCategoria, CadastroFornecedor, CadastroLote, CadastroEntradaSaida } from "@/Pages";
+import { Login, Home, Register, CadastroCargo, CadastroEstoque, Perfil, CadastroUsers, CadastroProduto, CadastroCategoria, CadastroFornecedor, CadastroLote, CadastroEntradaSaida } from "@/Pages";
 import { MainLayout } from "@/Layouts/MainLayout";
 import { PermissionRouter } from "./PermissionRouter";
 
@@ -50,6 +50,10 @@ import { PermissionRouter } from "./PermissionRouter";
     {
       path: "/users",
       element: <ProtectedRoute><PermissionRouter><MainLayout><CadastroUsers/></MainLayout></PermissionRouter></ProtectedRoute>
+    },
+    {
+      path: "/cargo",
+      element: <ProtectedRoute><PermissionRouter><MainLayout><CadastroCargo/></MainLayout></PermissionRouter></ProtectedRoute>
     },
     {
       path: "/profile",
