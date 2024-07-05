@@ -26,19 +26,16 @@ export function CadastroCargo() {
   const [formData, setFormData] = useState<AdicionarCargoSchema>({
     descricao: '',
     nivel: '',
-    empresa: 1
   });
 
   const [adicionarCargo, setAdicionarCargo] = useState<AdicionarCargoSchema>({
     descricao: '',
     nivel: '',
-    empresa: 1
   });
 
   const [error, setError] = useState({
     descricao: '',
     nivel: '',
-    empresa: ''
   });
 
   const [addModalOpen, setAddModalOpen] = useState(false);
@@ -65,7 +62,6 @@ export function CadastroCargo() {
     setAdicionarCargo({
       descricao: '',
       nivel: '',
-      empresa: dataLogin?.empresa || 1
     });
     setAddModalOpen(true);
   };
@@ -84,12 +80,18 @@ export function CadastroCargo() {
       setError({
         descricao: adicionarCargoSchemaValidator.error.errors.find((error) => error.path[0] === 'descricao')?.message || '',
         nivel: adicionarCargoSchemaValidator.error.errors.find((error) => error.path[0] === 'nivel')?.message || '',
-        empresa: adicionarCargoSchemaValidator.error.errors.find((error) => error.path[0] === 'empresa')?.message || ''
       });
     } else {
       setAddModalOpen(false);
+
       const url = `${api.url}/cargo?empresa=${dataLogin?.empresa}`;
-      const body = JSON.stringify(adicionarCargo);
+      const body = JSON.stringify(
+        {
+          descricao: adicionarCargo.descricao,
+          nivel: adicionarCargo.nivel,
+          empresa:  dataLogin?.empresa
+        }
+      );
       const headers = { Authorization: `Bearer ${dataLogin?.token}`, 'Content-Type': 'application/json' };
       fetchDataAddCargo(url, { body, headers, method: 'POST' });
       alert.openAlert({ text: 'Cargo Adicionado', type: 'success', time: 3000, title: 'Sucesso', onCloseAlert: () => {} });
@@ -106,7 +108,6 @@ export function CadastroCargo() {
     setFormData({
       descricao: cargo.descricao,
       nivel: cargo.nivel,
-      empresa: cargo.empresa
     });
     setEditModalOpen(true);
   };
@@ -208,9 +209,6 @@ export function CadastroCargo() {
             <Forms.Input id='nivel' type='text' arialabel='Nível' placeholder='Nível' onChangeAction={handleChange} value={adicionarCargo.nivel}>
               {error.nivel && <Forms.Small id="nivel" text={error.nivel} />}
             </Forms.Input>
-            <Forms.Input id='empresa' type='text' arialabel='Empresa' placeholder='Empresa' onChangeAction={handleChange} value={adicionarCargo.empresa.toString()}>
-              {error.empresa && <Forms.Small id="empresa" text={error.empresa} />}
-            </Forms.Input>
           </Forms.Root>
         </Modal.Body>
         <Modal.Footer>
@@ -229,9 +227,7 @@ export function CadastroCargo() {
             <Forms.Input id='nivel' type='text' arialabel='Nível' placeholder='Nível' onChangeAction={(e) => setFormData({ ...formData, nivel: e.target.value })} value={formData.nivel}>
               {error.nivel && <Forms.Small id="nivel" text={error.nivel} />}
             </Forms.Input>
-            <Forms.Input id='empresa' type='text' arialabel='Empresa' placeholder='Empresa' onChangeAction={(e) => setFormData({ ...formData, empresa: Number(e.target.value) })} value={formData.empresa.toString()}>
-              {error.empresa && <Forms.Small id="empresa" text={error.empresa} />}
-            </Forms.Input>
+            
           </Forms.Root>
         </Modal.Body>
         <Modal.Footer>
