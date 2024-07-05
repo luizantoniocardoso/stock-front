@@ -70,8 +70,8 @@ export function CadastroLote() {
   useEffect(() => {
     if (!responseLote || !responseLote.data?.lotes) return;
     setData(responseLote.data?.lotes || []);
-    setFilteredData(responseLote.data?.lotes.slice(0, 10) || []);
-    setTotalPages(Math.ceil(responseLote.data?.lotes?.length ? responseLote.data.lotes.length / 10 : 1));
+    setFilteredData(responseLote.data?.lotes.slice(0, 5) || []);
+    setTotalPages(Math.ceil(responseLote.data?.lotes?.length ? responseLote.data.lotes.length / 5 : 1));
   }, [responseLote.data, responseLote, setData, responseAddLote]);
 
   const handleAdd = () => {
@@ -173,26 +173,26 @@ export function CadastroLote() {
 
   useEffect(() => {
     const filtered = data.filter((item) => item.codigoBarras.toLowerCase().includes(search));
-    if (filtered.length < 10) return setFilteredData(filtered);
-    setTotalPages(Math.ceil(filtered.length / 10));
+    if (filtered.length < 5) return setFilteredData(filtered);
+    setTotalPages(Math.ceil(filtered.length / 5));
     setPage(1);
-    setFilteredData(filtered ? filtered.slice(0, 10) : []);
+    setFilteredData(filtered ? filtered.slice(0, 5) : []);
   }, [search]);
 
   const handleNextPage = () => {
     if (page >= totalPages) return;
     if (search) {
       const filtered = data.filter((item) => item.codigoBarras.toLowerCase().includes(search));
-      const start = page * 10;
-      const end = start + 10;
+      const start = page * 5;
+      const end = start + 5;
       setFilteredData(filtered.slice(start, end));
       setPage(page + 1);
       return;
     }
 
     setPage(page + 1);
-    const start = page * 10;
-    const end = start + 10;
+    const start = page * 5;
+    const end = start + 5;
     setFilteredData(data.slice(start, end));
   };
 
@@ -200,15 +200,15 @@ export function CadastroLote() {
     if (page <= 1) return;
     if (search) {
       const filtered = data.filter((item) => item.codigoBarras.toLowerCase().includes(search));
-      const start = (page - 2) * 10;
-      const end = start + 10;
+      const start = (page - 2) * 5;
+      const end = start + 5;
       setFilteredData(filtered.slice(start, end));
       setPage(page - 1);
       return;
     }
     setPage(page - 1);
-    const start = (page - 2) * 10;
-    const end = start + 10;
+    const start = (page - 2) * 5;
+    const end = start + 5;
     setFilteredData(data.slice(start, end));
   };
 

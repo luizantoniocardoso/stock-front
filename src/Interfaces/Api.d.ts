@@ -91,11 +91,11 @@ export interface SaidaResponse {
 }
 
 export interface LoteResponse {
-    lots: Lote[];
+    lotes: Lote[];
 }
 
 export interface FornecedorResponse {
-    suppliers: Fornecedor[];
+    fornecedores: Fornecedor[];
 }
 
 export interface Categoria {
@@ -127,23 +127,28 @@ export interface Estoque {
 
 export interface Fornecedor {
     id: number;
-    nome: string;
-    cnpj: string;
+    descricao: string;
+    email: string;
     telefone: string;
+    cnpj: string;
+    logradouro: string;
+    cidade: number;
     createdAt: string;
     updatedAt: string;
 }
 
+
 export interface Lote {
     id: number;
+    codigoBarras: string;
     quantidade: number;
-    validade: string;
+    dataFabricacao: string;
+    dataVencimento: string;
+    observacoes: string;
     createdAt: string;
     updatedAt: string;
-    produto: Produto;
-    fornecedor: Fornecedor;
-    estoque: Estoque;
 }
+
 
 export interface EntradaSaida {
     id: number;

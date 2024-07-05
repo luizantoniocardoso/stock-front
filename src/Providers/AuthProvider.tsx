@@ -94,7 +94,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
             return 
         }
         logout();
-    }, [dataLogin, isAuthenticated, !responseEmpresa.data, !responseUser.data]);
+    }, [dataLogin, isAuthenticated, !responseEmpresa.data, !responseUser.data, responseEmpresa.error, responseUser.error]);
 
     return (
       <AuthContext.Provider value={{ isAuthenticated, login, logout, dataLogin, user, empresa }}>

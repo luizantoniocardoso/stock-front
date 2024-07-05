@@ -8,6 +8,7 @@ import { Topbar } from "./Topbar";
 import { Sidebar } from "./Sidebar";
 import { Table } from "./Table";
 import { Content } from "./Content";
+import { Barcode } from "./Barcode";
 export { 
     Alert,
     Forms,
@@ -19,4 +20,5 @@ export {
     Sidebar,
     Table,
     Content,
+    Barcode
 };

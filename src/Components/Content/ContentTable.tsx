@@ -3,6 +3,7 @@ import { formatterData } from "@/Utils";
 import { Table } from "../Table";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPen, faTrash } from "@fortawesome/free-solid-svg-icons";
+import { Barcode } from "../Barcode";
 
 interface ContentTableProps {
   data: any;
@@ -18,6 +19,10 @@ interface ContentTableProps {
 }
 
 export const ContentTable = ({ data, filteredData, handleBeforePage, handleDelete, handleEdit, handleNextPage, page, col, title, permission}: ContentTableProps) => {
+
+
+
+
   return (
     <section className='px-8'>
       <Table.Root>
@@ -39,7 +44,9 @@ export const ContentTable = ({ data, filteredData, handleBeforePage, handleDelet
           {filteredData && filteredData.length > 0 ? filteredData.map((item: any, index: number) => (
             <Table.Row key={index}>
               {col.map((colItem, colIndex) => (
-                <Table.Cell key={colIndex} aling="center">{formatterData(item[colItem])}</Table.Cell>
+               colItem === 'codigoBarras' ?<Table.Cell key={colIndex} aling="center"><Barcode value={item[colItem]}/></Table.Cell>
+               : <Table.Cell aling="center" key={colIndex}>{formatterData(item[colItem])}</Table.Cell> 
+                
               ))}
               <Table.Cell aling="center">
                 <button onClick={() => handleEdit(item)} disabled={!permission}><FontAwesomeIcon icon={faPen} /></button>
