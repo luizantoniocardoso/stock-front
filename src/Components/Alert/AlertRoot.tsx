@@ -13,7 +13,7 @@ interface AlertRootProps {
 export const AlertRoot = ({ children, time, setOpen, open, type, onClose}: AlertRootProps) => {
     return (
         <div>
-            <TEAlert dismiss autohide delay={time} open={open} setOpen={setOpen} onClose={onClose} color={`bg-${type}-100 text-${type}-700`}>
+            <TEAlert className="z-50" dismiss autohide delay={time} open={open} setOpen={setOpen} onClose={onClose} color={`bg-${type}-100 text-${type}-700`}>
                 {children}
             </TEAlert>
         </div>

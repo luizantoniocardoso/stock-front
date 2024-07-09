@@ -53,7 +53,7 @@ export const ForgotPassword = ({isModalOpen, setIsModalOpen}: ForgotPasswordProp
 
     return (     
             <Modal.Root showModal={isModalOpen} setShowModal={setIsModalOpen}>
-                <Modal.Header title="Esqueceu a Senha" modalFunction={setIsModalOpen}/>
+                <Modal.Header title="Esqueceu a Senha" setShowModal={setIsModalOpen}/>
                 <Modal.Body>
                     <Forms.Root>
                         <Forms.Title text="Digite seu email" size={16} aling="left"/>

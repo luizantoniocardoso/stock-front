@@ -5,6 +5,7 @@ import { FormsDivider } from "./FormsDivider";
 import { FormsInput } from "./FormsInput";
 import { FormsLink } from "./FormsLink";
 import { FormsRoot } from "./FormsRoot";
+import { FormsSelect } from "./FormsSelect";
 import { FormsSmallText } from "./FormsSmallText";
 import { FormsText } from "./FormsText";
 import { FormsTextContraste } from "./FormTextContraste";
@@ -22,5 +23,6 @@ export const Forms = {
     Text: FormsText,
     Root: FormsRoot,
     Title: FormsTitle,
-    TextContrast: FormsTextContraste
+    TextContrast: FormsTextContraste,
+    Select: FormsSelect
 }
